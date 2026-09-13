@@ -1,0 +1,457 @@
+{
+  "schemaVersion": "1.2",
+  "datasetId": "nexus-naa-reviewed-supplied-library-2026-09-06",
+  "title": "Version-pinned calibration and analysis gamma-line collection",
+  "scope": "58 reviewed IAEA lines plus 23 independently reviewed records originating from the supplied competition workbook; useful collection, not a complete current decay database",
+  "retrievedAt": "2026-09-06",
+  "sources": {
+    "IAEA_2008": {
+      "name": "IAEA INDC(NDS)-0534, August 2008, Tables A-3, B-2 and D-2",
+      "url": "https://www-nds.iaea.org/sgnucdat/safeg2008.pdf",
+      "version": "2008-08"
+    },
+    "COMPETITION_LIBRARY_2026": {
+      "name": "User-supplied competition nuclide library workbook",
+      "url": "data/reference-nuclide-library.xlsx",
+      "version": "received-2026-09-06",
+      "sha256": "a818b34161319527cb913d92414c890b967faa0b2f6d2eae408406417d103a39",
+      "qualification": "supplied_reference_independently_reviewed",
+      "auditReport": "data/SUPPLIED_DATA_AUDIT.md",
+      "auditedAt": "2026-09-06"
+    }
+  },
+  "lines": [
+    {
+      "id": "IAEA2008-1",
+      "nuclide": "Cs-137",
+      "element": "Cs",
+      "energyKeV": 661.657,
+      "intensityPercent": 84.99,
+      "mode": "decay",
+      "sourceId": "IAEA_2008",
+      "sourcePage": 62,
+      "sourceUrl": "https://www-nds.iaea.org/sgnucdat/safeg2008.pdf#page=62",
+      "verification": "checked_against_report"
+    },
+    {
+      "id": "IAEA2008-2",
+      "nuclide": "Na-22",
+      "element": "Na",
+      "energyKeV": 511,
+      "intensityPercent": 179.8,
+      "mode": "annihilation",
+      "sourceId": "IAEA_2008",
+      "sourcePage": 116,
+      "sourceUrl": "https://www-nds.iaea.org/sgnucdat/safeg2008.pdf#page=116",
+      "verification": "checked_against_report"
+    },
+    {
+      "id": "IAEA2008-3",
+      "nuclide": "Na-22",
+      "element": "Na",
+      "energyKeV": 1274.537,
+      "intensityPercent": 99.94,
+      "mode": "decay",
+      "sourceId": "IAEA_2008",
+      "sourcePage": 116,
+      "sourceUrl": "https://www-nds.iaea.org/sgnucdat/safeg2008.pdf#page=116",
+      "verification": "checked_against_report"
+    },
+    {
+      "id": "IAEA2008-4",
+      "nuclide": "Na-24",
+      "element": "Na",
+      "energyKeV": 1368.626,
+      "intensityPercent": 99.9935,
+      "mode": "decay",
+      "sourceId": "IAEA_2008",
+      "sourcePage": 116,
+      "sourceUrl": "https://www-nds.iaea.org/sgnucdat/safeg2008.pdf#page=116",
+      "verification": "checked_against_report"
+    },
+    {
+      "id": "IAEA2008-5",
+      "nuclide": "Na-24",
+      "element": "Na",
+      "energyKeV": 2754.007,
+      "intensityPercent": 99.872,
+      "mode": "decay",
+      "sourceId": "IAEA_2008",
+      "sourcePage": 116,
+      "sourceUrl": "https://www-nds.iaea.org/sgnucdat/safeg2008.pdf#page=116",
+      "verification": "checked_against_report"
+    },
+    {
+      "id": "IAEA2008-6",
+      "nuclide": "Mg-27",
+      "element": "Mg",
+      "energyKeV": 843.76,
+      "intensityPercent": 71.8,
+      "mode": "decay",
+      "sourceId": "IAEA_2008",
+      "sourcePage": 116,
+      "sourceUrl": "https://www-nds.iaea.org/sgnucdat/safeg2008.pdf#page=116",
+      "verification": "checked_against_report"
+    },
+    {
+      "id": "IAEA2008-7",
+      "nuclide": "Mg-27",
+      "element": "Mg",
+      "energyKeV": 1014.44,
+      "intensityPercent": 28,
+      "mode": "decay",
+      "sourceId": "IAEA_2008",
+      "sourcePage": 116,
+      "sourceUrl": "https://www-nds.iaea.org/sgnucdat/safeg2008.pdf#page=116",
+      "verification": "checked_against_report"
+    },
+    {
+      "id": "IAEA2008-8",
+      "nuclide": "Ar-41",
+      "element": "Ar",
+      "energyKeV": 1293.64,
+      "intensityPercent": 99.16,
+      "mode": "decay",
+      "sourceId": "IAEA_2008",
+      "sourcePage": 116,
+      "sourceUrl": "https://www-nds.iaea.org/sgnucdat/safeg2008.pdf#page=116",
+      "verification": "checked_against_report"
+    },
+    {
+      "id": "IAEA2008-9",
+      "nuclide": "K-40",
+      "element": "K",
+      "energyKeV": 1460.822,
+      "intensityPercent": 10.66,
+      "mode": "decay",
+      "sourceId": "IAEA_2008",
+      "sourcePage": 116,
+      "sourceUrl": "https://www-nds.iaea.org/sgnucdat/safeg2008.pdf#page=116",
+      "verification": "checked_against_report"
+    },
+    {
+      "id": "IAEA2008-10",
+      "nuclide": "Cr-51",
+      "element": "Cr",
+      "energyKeV": 320.0835,
+      "intensityPercent": 9.87,
+      "mode": "decay",
+      "sourceId": "IAEA_2008",
+      "sourcePage": 116,
+      "sourceUrl": "https://www-nds.iaea.org/sgnucdat/safeg2008.pdf#page=116",
+      "verification": "checked_against_report"
+    },
+    {
+      "id": "IAEA2008-11",
+      "nuclide": "Mn-54",
+      "element": "Mn",
+      "energyKeV": 834.838,
+      "intensityPercent": 99.9746,
+      "mode": "decay",
+      "sourceId": "IAEA_2008",
+      "sourcePage": 116,
+      "sourceUrl": "https://www-nds.iaea.org/sgnucdat/safeg2008.pdf#page=116",
+      "verification": "checked_against_report"
+    },
+    {
+      "id": "IAEA2008-12",
+      "nuclide": "Mn-56",
+      "element": "Mn",
+      "energyKeV": 846.7638,
+      "intensityPercent": 98.85,
+      "mode": "decay",
+      "sourceId": "IAEA_2008",
+      "sourcePage": 117,
+      "sourceUrl": "https://www-nds.iaea.org/sgnucdat/safeg2008.pdf#page=117",
+      "verification": "checked_against_report"
+    },
+    {
+      "id": "IAEA2008-13",
+      "nuclide": "Mn-56",
+      "element": "Mn",
+      "energyKeV": 1810.726,
+      "intensityPercent": 26.9,
+      "mode": "decay",
+      "sourceId": "IAEA_2008",
+      "sourcePage": 117,
+      "sourceUrl": "https://www-nds.iaea.org/sgnucdat/safeg2008.pdf#page=117",
+      "verification": "checked_against_report"
+    },
+    {
+      "id": "IAEA2008-14",
+      "nuclide": "Mn-56",
+      "element": "Mn",
+      "energyKeV": 2113.092,
+      "intensityPercent": 14.2,
+      "mode": "decay",
+      "sourceId": "IAEA_2008",
+      "sourcePage": 117,
+      "sourceUrl": "https://www-nds.iaea.org/sgnucdat/safeg2008.pdf#page=117",
+      "verification": "checked_against_report"
+    },
+    {
+      "id": "IAEA2008-15",
+      "nuclide": "Fe-59",
+      "element": "Fe",
+      "energyKeV": 1099.245,
+      "intensityPercent": 56.59,
+      "mode": "decay",
+      "sourceId": "IAEA_2008",
+      "sourcePage": 117,
+      "sourceUrl": "https://www-nds.iaea.org/sgnucdat/safeg2008.pdf#page=117",
+      "verification": "checked_against_report"
+    },
+    {
+      "id": "IAEA2008-16",
+      "nuclide": "Fe-59",
+      "element": "Fe",
+      "energyKeV": 1291.59,
+      "intensityPercent": 43.21,
+      "mode": "decay",
+      "sourceId": "IAEA_2008",
+      "sourcePage": 117,
+      "sourceUrl": "https://www-nds.iaea.org/sgnucdat/safeg2008.pdf#page=117",
+      "verification": "checked_against_report"
+    },
+    {
+      "id": "IAEA2008-17",
+      "nuclide": "Co-57",
+      "element": "Co",
+      "energyKeV": 122.06065,
+      "intensityPercent": 85.51,
+      "mode": "decay",
+      "sourceId": "IAEA_2008",
+      "sourcePage": 117,
+      "sourceUrl": "https://www-nds.iaea.org/sgnucdat/safeg2008.pdf#page=117",
+      "verification": "checked_against_report"
+    },
+    {
+      "id": "IAEA2008-18",
+      "nuclide": "Co-57",
+      "element": "Co",
+      "energyKeV": 136.47356,
+      "intensityPercent": 10.71,
+      "mode": "decay",
+      "sourceId": "IAEA_2008",
+      "sourcePage": 117,
+      "sourceUrl": "https://www-nds.iaea.org/sgnucdat/safeg2008.pdf#page=117",
+      "verification": "checked_against_report"
+    },
+    {
+      "id": "IAEA2008-19",
+      "nuclide": "Co-60",
+      "element": "Co",
+      "energyKeV": 1173.228,
+      "intensityPercent": 99.85,
+      "mode": "decay",
+      "sourceId": "IAEA_2008",
+      "sourcePage": 117,
+      "sourceUrl": "https://www-nds.iaea.org/sgnucdat/safeg2008.pdf#page=117",
+      "verification": "checked_against_report"
+    },
+    {
+      "id": "IAEA2008-20",
+      "nuclide": "Co-60",
+      "element": "Co",
+      "energyKeV": 1332.492,
+      "intensityPercent": 99.9826,
+      "mode": "decay",
+      "sourceId": "IAEA_2008",
+      "sourcePage": 117,
+      "sourceUrl": "https://www-nds.iaea.org/sgnucdat/safeg2008.pdf#page=117",
+      "verification": "checked_against_report"
+    },
+    {
+      "id": "IAEA2008-21",
+      "nuclide": "Au-198",
+      "element": "Au",
+      "energyKeV": 411.80205,
+      "intensityPercent": 95.54,
+      "mode": "decay",
+      "sourceId": "IAEA_2008",
+      "sourcePage": 119,
+      "sourceUrl": "https://www-nds.iaea.org/sgnucdat/safeg2008.pdf#page=119",
+      "verification": "checked_against_report"
+    },
+    {
+      "id": "IAEA2008-22", "nuclide": "Am-241", "element": "Am", "energyKeV": 26.3446, "intensityPercent": 2.40, "mode": "decay", "sourceId": "IAEA_2008", "sourcePage": 42, "sourceUrl": "https://www-nds.iaea.org/sgnucdat/safeg2008.pdf#page=42", "verification": "checked_against_report"
+    },
+    {
+      "id": "IAEA2008-23", "nuclide": "Am-241", "element": "Am", "energyKeV": 33.1963, "intensityPercent": 0.121, "mode": "decay", "sourceId": "IAEA_2008", "sourcePage": 42, "sourceUrl": "https://www-nds.iaea.org/sgnucdat/safeg2008.pdf#page=42", "verification": "checked_against_report"
+    },
+    {
+      "id": "IAEA2008-24", "nuclide": "Am-241", "element": "Am", "energyKeV": 59.5409, "intensityPercent": 35.78, "mode": "decay", "sourceId": "IAEA_2008", "sourcePage": 42, "sourceUrl": "https://www-nds.iaea.org/sgnucdat/safeg2008.pdf#page=42", "verification": "checked_against_report"
+    },
+    {
+      "id": "IAEA2008-25", "nuclide": "Am-241", "element": "Am", "energyKeV": 98.95, "intensityPercent": 0.0203, "mode": "decay", "sourceId": "IAEA_2008", "sourcePage": 42, "sourceUrl": "https://www-nds.iaea.org/sgnucdat/safeg2008.pdf#page=42", "verification": "checked_against_report"
+    },
+    {
+      "id": "IAEA2008-26", "nuclide": "Cs-134", "element": "Cs", "energyKeV": 563.243, "intensityPercent": 8.37, "mode": "decay", "sourceId": "IAEA_2008", "sourcePage": 61, "sourceUrl": "https://www-nds.iaea.org/sgnucdat/safeg2008.pdf#page=61", "verification": "checked_against_report"
+    },
+    {
+      "id": "IAEA2008-27", "nuclide": "Cs-134", "element": "Cs", "energyKeV": 569.327, "intensityPercent": 15.38, "mode": "decay", "sourceId": "IAEA_2008", "sourcePage": 61, "sourceUrl": "https://www-nds.iaea.org/sgnucdat/safeg2008.pdf#page=61", "verification": "checked_against_report"
+    },
+    {
+      "id": "IAEA2008-28", "nuclide": "Cs-134", "element": "Cs", "energyKeV": 604.720, "intensityPercent": 97.650, "mode": "decay", "sourceId": "IAEA_2008", "sourcePage": 61, "sourceUrl": "https://www-nds.iaea.org/sgnucdat/safeg2008.pdf#page=61", "verification": "checked_against_report"
+    },
+    {
+      "id": "IAEA2008-29", "nuclide": "Cs-134", "element": "Cs", "energyKeV": 795.83, "intensityPercent": 85.5, "mode": "decay", "sourceId": "IAEA_2008", "sourcePage": 61, "sourceUrl": "https://www-nds.iaea.org/sgnucdat/safeg2008.pdf#page=61", "verification": "checked_against_report"
+    },
+    {
+      "id": "IAEA2008-30", "nuclide": "Cs-134", "element": "Cs", "energyKeV": 801.945, "intensityPercent": 8.70, "mode": "decay", "sourceId": "IAEA_2008", "sourcePage": 61, "sourceUrl": "https://www-nds.iaea.org/sgnucdat/safeg2008.pdf#page=61", "verification": "checked_against_report"
+    },
+    {
+      "id": "IAEA2008-31", "nuclide": "Cs-134", "element": "Cs", "energyKeV": 1365.186, "intensityPercent": 3.017, "mode": "decay", "sourceId": "IAEA_2008", "sourcePage": 61, "sourceUrl": "https://www-nds.iaea.org/sgnucdat/safeg2008.pdf#page=61", "verification": "checked_against_report"
+    },
+    {
+      "id": "IAEA2008-32", "nuclide": "Eu-152", "element": "Eu", "energyKeV": 121.7817, "intensityPercent": 28.41, "mode": "decay", "sourceId": "IAEA_2008", "sourcePage": 63, "sourceUrl": "https://www-nds.iaea.org/sgnucdat/safeg2008.pdf#page=63", "verification": "checked_against_report"
+    },
+    {
+      "id": "IAEA2008-33", "nuclide": "Eu-152", "element": "Eu", "energyKeV": 244.6974, "intensityPercent": 7.55, "mode": "decay", "sourceId": "IAEA_2008", "sourcePage": 63, "sourceUrl": "https://www-nds.iaea.org/sgnucdat/safeg2008.pdf#page=63", "verification": "checked_against_report"
+    },
+    {
+      "id": "IAEA2008-34", "nuclide": "Eu-152", "element": "Eu", "energyKeV": 344.2785, "intensityPercent": 26.58, "mode": "decay", "sourceId": "IAEA_2008", "sourcePage": 63, "sourceUrl": "https://www-nds.iaea.org/sgnucdat/safeg2008.pdf#page=63", "verification": "checked_against_report"
+    },
+    {
+      "id": "IAEA2008-35", "nuclide": "Eu-152", "element": "Eu", "energyKeV": 411.1165, "intensityPercent": 2.237, "mode": "decay", "sourceId": "IAEA_2008", "sourcePage": 63, "sourceUrl": "https://www-nds.iaea.org/sgnucdat/safeg2008.pdf#page=63", "verification": "checked_against_report"
+    },
+    {
+      "id": "IAEA2008-36", "nuclide": "Eu-152", "element": "Eu", "energyKeV": 443.965, "intensityPercent": 3.125, "mode": "decay", "sourceId": "IAEA_2008", "sourcePage": 63, "sourceUrl": "https://www-nds.iaea.org/sgnucdat/safeg2008.pdf#page=63", "verification": "checked_against_report"
+    },
+    {
+      "id": "IAEA2008-37", "nuclide": "Eu-152", "element": "Eu", "energyKeV": 778.9045, "intensityPercent": 12.96, "mode": "decay", "sourceId": "IAEA_2008", "sourcePage": 63, "sourceUrl": "https://www-nds.iaea.org/sgnucdat/safeg2008.pdf#page=63", "verification": "checked_against_report"
+    },
+    {
+      "id": "IAEA2008-38", "nuclide": "Eu-152", "element": "Eu", "energyKeV": 867.380, "intensityPercent": 4.241, "mode": "decay", "sourceId": "IAEA_2008", "sourcePage": 63, "sourceUrl": "https://www-nds.iaea.org/sgnucdat/safeg2008.pdf#page=63", "verification": "checked_against_report"
+    },
+    {
+      "id": "IAEA2008-39", "nuclide": "Eu-152", "element": "Eu", "energyKeV": 964.072, "intensityPercent": 14.62, "mode": "decay", "sourceId": "IAEA_2008", "sourcePage": 63, "sourceUrl": "https://www-nds.iaea.org/sgnucdat/safeg2008.pdf#page=63", "verification": "checked_against_report"
+    },
+    {
+      "id": "IAEA2008-40", "nuclide": "Eu-152", "element": "Eu", "energyKeV": 1085.837, "intensityPercent": 10.13, "mode": "decay", "sourceId": "IAEA_2008", "sourcePage": 63, "sourceUrl": "https://www-nds.iaea.org/sgnucdat/safeg2008.pdf#page=63", "verification": "checked_against_report"
+    },
+    {
+      "id": "IAEA2008-41", "nuclide": "Eu-152", "element": "Eu", "energyKeV": 1089.737, "intensityPercent": 1.731, "mode": "decay", "sourceId": "IAEA_2008", "sourcePage": 63, "sourceUrl": "https://www-nds.iaea.org/sgnucdat/safeg2008.pdf#page=63", "verification": "checked_against_report"
+    },
+    {
+      "id": "IAEA2008-42", "nuclide": "Eu-152", "element": "Eu", "energyKeV": 1112.076, "intensityPercent": 13.40, "mode": "decay", "sourceId": "IAEA_2008", "sourcePage": 63, "sourceUrl": "https://www-nds.iaea.org/sgnucdat/safeg2008.pdf#page=63", "verification": "checked_against_report"
+    },
+    {
+      "id": "IAEA2008-43", "nuclide": "Eu-152", "element": "Eu", "energyKeV": 1212.948, "intensityPercent": 1.415, "mode": "decay", "sourceId": "IAEA_2008", "sourcePage": 63, "sourceUrl": "https://www-nds.iaea.org/sgnucdat/safeg2008.pdf#page=63", "verification": "checked_against_report"
+    },
+    {
+      "id": "IAEA2008-44", "nuclide": "Eu-152", "element": "Eu", "energyKeV": 1299.142, "intensityPercent": 1.632, "mode": "decay", "sourceId": "IAEA_2008", "sourcePage": 63, "sourceUrl": "https://www-nds.iaea.org/sgnucdat/safeg2008.pdf#page=63", "verification": "checked_against_report"
+    },
+    {
+      "id": "IAEA2008-45", "nuclide": "Eu-152", "element": "Eu", "energyKeV": 1408.013, "intensityPercent": 20.85, "mode": "decay", "sourceId": "IAEA_2008", "sourcePage": 63, "sourceUrl": "https://www-nds.iaea.org/sgnucdat/safeg2008.pdf#page=63", "verification": "checked_against_report"
+    },
+    {
+      "id": "IAEA2008-46", "nuclide": "Eu-154", "element": "Eu", "energyKeV": 123.0706, "intensityPercent": 40.4, "mode": "decay", "sourceId": "IAEA_2008", "sourcePage": 63, "sourceUrl": "https://www-nds.iaea.org/sgnucdat/safeg2008.pdf#page=63", "verification": "checked_against_report"
+    },
+    {
+      "id": "IAEA2008-47", "nuclide": "Eu-154", "element": "Eu", "energyKeV": 247.9288, "intensityPercent": 6.89, "mode": "decay", "sourceId": "IAEA_2008", "sourcePage": 63, "sourceUrl": "https://www-nds.iaea.org/sgnucdat/safeg2008.pdf#page=63", "verification": "checked_against_report"
+    },
+    {
+      "id": "IAEA2008-48", "nuclide": "Eu-154", "element": "Eu", "energyKeV": 591.755, "intensityPercent": 4.95, "mode": "decay", "sourceId": "IAEA_2008", "sourcePage": 63, "sourceUrl": "https://www-nds.iaea.org/sgnucdat/safeg2008.pdf#page=63", "verification": "checked_against_report"
+    },
+    {
+      "id": "IAEA2008-49", "nuclide": "Eu-154", "element": "Eu", "energyKeV": 692.4205, "intensityPercent": 1.79, "mode": "decay", "sourceId": "IAEA_2008", "sourcePage": 63, "sourceUrl": "https://www-nds.iaea.org/sgnucdat/safeg2008.pdf#page=63", "verification": "checked_against_report"
+    },
+    {
+      "id": "IAEA2008-50", "nuclide": "Eu-154", "element": "Eu", "energyKeV": 723.3014, "intensityPercent": 20.05, "mode": "decay", "sourceId": "IAEA_2008", "sourcePage": 63, "sourceUrl": "https://www-nds.iaea.org/sgnucdat/safeg2008.pdf#page=63", "verification": "checked_against_report"
+    },
+    {
+      "id": "IAEA2008-51", "nuclide": "Eu-154", "element": "Eu", "energyKeV": 756.8020, "intensityPercent": 4.53, "mode": "decay", "sourceId": "IAEA_2008", "sourcePage": 63, "sourceUrl": "https://www-nds.iaea.org/sgnucdat/safeg2008.pdf#page=63", "verification": "checked_against_report"
+    },
+    {
+      "id": "IAEA2008-52", "nuclide": "Eu-154", "element": "Eu", "energyKeV": 873.1834, "intensityPercent": 12.17, "mode": "decay", "sourceId": "IAEA_2008", "sourcePage": 63, "sourceUrl": "https://www-nds.iaea.org/sgnucdat/safeg2008.pdf#page=63", "verification": "checked_against_report"
+    },
+    {
+      "id": "IAEA2008-53", "nuclide": "Eu-154", "element": "Eu", "energyKeV": 996.262, "intensityPercent": 10.50, "mode": "decay", "sourceId": "IAEA_2008", "sourcePage": 63, "sourceUrl": "https://www-nds.iaea.org/sgnucdat/safeg2008.pdf#page=63", "verification": "checked_against_report"
+    },
+    {
+      "id": "IAEA2008-54", "nuclide": "Eu-154", "element": "Eu", "energyKeV": 1004.725, "intensityPercent": 17.85, "mode": "decay", "sourceId": "IAEA_2008", "sourcePage": 63, "sourceUrl": "https://www-nds.iaea.org/sgnucdat/safeg2008.pdf#page=63", "verification": "checked_against_report"
+    },
+    {
+      "id": "IAEA2008-55", "nuclide": "Eu-154", "element": "Eu", "energyKeV": 1246.121, "intensityPercent": 0.862, "mode": "decay", "sourceId": "IAEA_2008", "sourcePage": 63, "sourceUrl": "https://www-nds.iaea.org/sgnucdat/safeg2008.pdf#page=63", "verification": "checked_against_report"
+    },
+    {
+      "id": "IAEA2008-56", "nuclide": "Eu-154", "element": "Eu", "energyKeV": 1274.429, "intensityPercent": 34.9, "mode": "decay", "sourceId": "IAEA_2008", "sourcePage": 63, "sourceUrl": "https://www-nds.iaea.org/sgnucdat/safeg2008.pdf#page=63", "verification": "checked_against_report"
+    },
+    {
+      "id": "IAEA2008-57", "nuclide": "Eu-154", "element": "Eu", "energyKeV": 1596.4804, "intensityPercent": 1.783, "mode": "decay", "sourceId": "IAEA_2008", "sourcePage": 63, "sourceUrl": "https://www-nds.iaea.org/sgnucdat/safeg2008.pdf#page=63", "verification": "checked_against_report"
+    },
+    {
+      "id": "IAEA2008-58", "nuclide": "Zn-65", "element": "Zn", "energyKeV": 1115.539, "intensityPercent": 50.60, "mode": "decay", "sourceId": "IAEA_2008", "sourcePage": 117, "sourceUrl": "https://www-nds.iaea.org/sgnucdat/safeg2008.pdf#page=117", "verification": "checked_against_report"
+    },
+    {
+      "id": "COMP2026-01", "nuclide": "Th-234", "element": "Th", "energyKeV": 63.29, "intensityPercent": 3.7, "halfLife": "24.10 day", "mode": "decay", "sourceId": "COMPETITION_LIBRARY_2026", "sourcePage": 1, "sourceUrl": "data/reference-nuclide-library.xlsx", "verification": "independently_reviewed", "auditSourceUrl": "https://www.lnhb.fr/nuclides/Th-234_com.pdf", "proxyFor": "U-238", "proxyCondition": "Requires justified U-238/Th-234 equilibrium; the photon is emitted by Th-234."
+    },
+    {
+      "id": "COMP2026-02", "nuclide": "Th-234", "element": "Th", "energyKeV": 92.38, "intensityPercent": 2.18, "halfLife": "24.10 day", "mode": "decay", "sourceId": "COMPETITION_LIBRARY_2026", "sourcePage": 1, "sourceUrl": "data/reference-nuclide-library.xlsx", "verification": "independently_reviewed", "auditSourceUrl": "https://www.lnhb.fr/nuclides/Th-234_com.pdf", "proxyFor": "U-238", "proxyCondition": "Requires justified U-238/Th-234 equilibrium; the photon is emitted by Th-234."
+    },
+    {
+      "id": "COMP2026-03", "nuclide": "Pb-210", "element": "Pb", "energyKeV": 46.539, "intensityPercent": 4.25, "halfLife": "22.20 year", "mode": "decay", "sourceId": "COMPETITION_LIBRARY_2026", "sourcePage": 1, "sourceUrl": "data/reference-nuclide-library.xlsx", "verification": "independently_reviewed", "auditSourceUrl": "https://nds.iaea.org/publications/indc/indc-nds-0502.pdf"
+    },
+    {
+      "id": "COMP2026-04", "nuclide": "U-235", "element": "U", "energyKeV": 143.76, "intensityPercent": 10.96, "halfLife": "7.038E+08 year", "mode": "decay", "sourceId": "COMPETITION_LIBRARY_2026", "sourcePage": 1, "sourceUrl": "data/reference-nuclide-library.xlsx", "verification": "independently_reviewed", "auditSourceUrl": "https://nds.iaea.org/publications/indc/indc-nds-0502.pdf"
+    },
+    {
+      "id": "COMP2026-05", "nuclide": "U-235", "element": "U", "energyKeV": 185.715, "intensityPercent": 57.2, "halfLife": "7.038E+08 year", "mode": "decay", "sourceId": "COMPETITION_LIBRARY_2026", "sourcePage": 1, "sourceUrl": "data/reference-nuclide-library.xlsx", "verification": "independently_reviewed", "auditSourceUrl": "https://nds.iaea.org/publications/indc/indc-nds-0502.pdf"
+    },
+    {
+      "id": "COMP2026-06", "nuclide": "Ba-133", "element": "Ba", "energyKeV": 276.3989, "intensityPercent": 7.16, "halfLife": "10.539 year", "mode": "decay", "sourceId": "COMPETITION_LIBRARY_2026", "sourcePage": 1, "sourceUrl": "data/reference-nuclide-library.xlsx", "verification": "independently_reviewed", "auditSourceUrl": "https://www.lnhb.fr/nuclides/Ba-133_com.pdf"
+    },
+    {
+      "id": "COMP2026-07", "nuclide": "Ba-133", "element": "Ba", "energyKeV": 302.8508, "intensityPercent": 18.34, "halfLife": "10.539 year", "mode": "decay", "sourceId": "COMPETITION_LIBRARY_2026", "sourcePage": 1, "sourceUrl": "data/reference-nuclide-library.xlsx", "verification": "independently_reviewed", "auditSourceUrl": "https://www.lnhb.fr/nuclides/Ba-133_com.pdf"
+    },
+    {
+      "id": "COMP2026-08", "nuclide": "Ba-133", "element": "Ba", "energyKeV": 356.0129, "intensityPercent": 62.05, "halfLife": "10.539 year", "mode": "decay", "sourceId": "COMPETITION_LIBRARY_2026", "sourcePage": 1, "sourceUrl": "data/reference-nuclide-library.xlsx", "verification": "independently_reviewed", "auditSourceUrl": "https://www.lnhb.fr/nuclides/Ba-133_com.pdf"
+    },
+    {
+      "id": "COMP2026-09", "nuclide": "Ba-133", "element": "Ba", "energyKeV": 383.8485, "intensityPercent": 8.94, "halfLife": "10.539 year", "mode": "decay", "sourceId": "COMPETITION_LIBRARY_2026", "sourcePage": 1, "sourceUrl": "data/reference-nuclide-library.xlsx", "verification": "independently_reviewed", "auditSourceUrl": "https://www.lnhb.fr/nuclides/Ba-133_com.pdf"
+    },
+    {
+      "id": "COMP2026-10", "nuclide": "Pb-214", "element": "Pb", "energyKeV": 295.224, "intensityPercent": 18.414, "halfLife": "26.8 min", "mode": "decay", "sourceId": "COMPETITION_LIBRARY_2026", "sourcePage": 1, "sourceUrl": "data/reference-nuclide-library.xlsx", "verification": "independently_reviewed", "auditSourceUrl": "https://www.lnhb.fr/nuclides/Pb-214_tables.pdf"
+    },
+    {
+      "id": "COMP2026-11", "nuclide": "Pb-214", "element": "Pb", "energyKeV": 351.932, "intensityPercent": 35.6, "halfLife": "26.8 min", "mode": "decay", "sourceId": "COMPETITION_LIBRARY_2026", "sourcePage": 1, "sourceUrl": "data/reference-nuclide-library.xlsx", "verification": "independently_reviewed", "auditSourceUrl": "https://www.lnhb.fr/nuclides/Pb-214_tables.pdf"
+    },
+    {
+      "id": "COMP2026-12", "nuclide": "Bi-214", "element": "Bi", "energyKeV": 609.316, "intensityPercent": 45.49, "halfLife": "19.71 min", "mode": "decay", "sourceId": "COMPETITION_LIBRARY_2026", "sourcePage": 1, "sourceUrl": "data/reference-nuclide-library.xlsx", "verification": "independently_reviewed", "auditSourceUrl": "https://www.lnhb.fr/nuclides/Bi-214_com.pdf"
+    },
+    {
+      "id": "COMP2026-13", "nuclide": "Bi-214", "element": "Bi", "energyKeV": 1120.295, "intensityPercent": 14.92, "halfLife": "19.71 min", "mode": "decay", "sourceId": "COMPETITION_LIBRARY_2026", "sourcePage": 1, "sourceUrl": "data/reference-nuclide-library.xlsx", "verification": "independently_reviewed", "auditSourceUrl": "https://www.lnhb.fr/nuclides/Bi-214_com.pdf"
+    },
+    {
+      "id": "COMP2026-14", "nuclide": "Bi-214", "element": "Bi", "energyKeV": 1764.498, "intensityPercent": 15.3, "halfLife": "19.71 min", "mode": "decay", "sourceId": "COMPETITION_LIBRARY_2026", "sourcePage": 1, "sourceUrl": "data/reference-nuclide-library.xlsx", "verification": "independently_reviewed", "auditSourceUrl": "https://www.lnhb.fr/nuclides/Bi-214_com.pdf"
+    },
+    {
+      "id": "COMP2026-15", "nuclide": "Ac-228", "element": "Ac", "energyKeV": 911.204, "intensityPercent": 25.8, "halfLife": "6.15 hour", "mode": "decay", "sourceId": "COMPETITION_LIBRARY_2026", "sourcePage": 1, "sourceUrl": "data/reference-nuclide-library.xlsx", "verification": "independently_reviewed", "auditSourceUrl": "https://www-pub.iaea.org/MTCD/Publications/PDF/Pub1568_web.pdf"
+    },
+    {
+      "id": "COMP2026-16", "nuclide": "Ac-228", "element": "Ac", "energyKeV": 968.971, "intensityPercent": 15.8, "halfLife": "6.15 hour", "mode": "decay", "sourceId": "COMPETITION_LIBRARY_2026", "sourcePage": 1, "sourceUrl": "data/reference-nuclide-library.xlsx", "verification": "independently_reviewed", "auditSourceUrl": "https://www-pub.iaea.org/MTCD/Publications/PDF/Pub1568_web.pdf"
+    },
+    {
+      "id": "COMP2026-17", "nuclide": "Pb-212", "element": "Pb", "energyKeV": 238.632, "intensityPercent": 43.6, "halfLife": "10.64 hour", "mode": "decay", "sourceId": "COMPETITION_LIBRARY_2026", "sourcePage": 1, "sourceUrl": "data/reference-nuclide-library.xlsx", "verification": "independently_reviewed", "auditSourceUrl": "https://nds.iaea.org/publications/indc/indc-nds-0502.pdf"
+    },
+    {
+      "id": "COMP2026-18", "nuclide": "Tl-208", "element": "Tl", "energyKeV": 583.187, "intensityPercent": 85, "halfLife": "3.060 min", "mode": "decay", "sourceId": "COMPETITION_LIBRARY_2026", "sourcePage": 1, "sourceUrl": "data/reference-nuclide-library.xlsx", "verification": "independently_reviewed", "auditSourceUrl": "https://nds.iaea.org/publications/indc/indc-nds-0502.pdf"
+    },
+    {
+      "id": "COMP2026-19", "nuclide": "Tl-208", "element": "Tl", "energyKeV": 2614.511, "intensityPercent": 99.79, "halfLife": "3.060 min", "mode": "decay", "sourceId": "COMPETITION_LIBRARY_2026", "sourcePage": 1, "sourceUrl": "data/reference-nuclide-library.xlsx", "verification": "independently_reviewed", "auditSourceUrl": "https://nds.iaea.org/publications/indc/indc-nds-0502.pdf"
+    },
+    {
+      "id": "COMP2026-20", "nuclide": "Bi-212", "element": "Bi", "energyKeV": 727.33, "intensityPercent": 6.67, "halfLife": "60.55 min", "mode": "decay", "sourceId": "COMPETITION_LIBRARY_2026", "sourcePage": 1, "sourceUrl": "data/reference-nuclide-library.xlsx", "verification": "independently_reviewed", "auditSourceUrl": "https://www-pub.iaea.org/MTCD/Publications/PDF/Pub1568_web.pdf"
+    },
+    {
+      "id": "COMP2026-21", "nuclide": "I-131", "element": "I", "energyKeV": 284.305, "intensityPercent": 6.15, "halfLife": "8.0233 day", "mode": "decay", "sourceId": "COMPETITION_LIBRARY_2026", "sourcePage": 1, "sourceUrl": "data/reference-nuclide-library.xlsx", "verification": "independently_reviewed", "auditSourceUrl": "https://www-nds.iaea.org/IRDFFtest/decay-eval/T%20G%20X_I-131.pdf"
+    },
+    {
+      "id": "COMP2026-22", "nuclide": "I-131", "element": "I", "energyKeV": 364.49, "intensityPercent": 81.4, "halfLife": "8.0233 day", "mode": "decay", "sourceId": "COMPETITION_LIBRARY_2026", "sourcePage": 1, "sourceUrl": "data/reference-nuclide-library.xlsx", "verification": "independently_reviewed", "auditSourceUrl": "https://www-nds.iaea.org/IRDFFtest/decay-eval/T%20G%20X_I-131.pdf"
+    },
+    {
+      "id": "COMP2026-23", "nuclide": "I-131", "element": "I", "energyKeV": 636.988, "intensityPercent": 7.14, "halfLife": "8.0233 day", "mode": "decay", "sourceId": "COMPETITION_LIBRARY_2026", "sourcePage": 1, "sourceUrl": "data/reference-nuclide-library.xlsx", "verification": "independently_reviewed", "auditSourceUrl": "https://www-nds.iaea.org/IRDFFtest/decay-eval/T%20G%20X_I-131.pdf"
+    }
+  ]
+}

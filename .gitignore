@@ -1,0 +1,15 @@
+node_modules/
+.pnpm-store/
+.DS_Store
+Thumbs.db
+*.log
+coverage/
+.nyc_output/
+.runtime/
+.review/
+exports/
+__pycache__/
+*.py[cod]
+.env
+.env.*
+!.env.example

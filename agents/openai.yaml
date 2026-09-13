@@ -1,0 +1,7 @@
+interface:
+  display_name: "Nexus-NAA"
+  short_description: "Evidence-driven gamma spectrum analysis"
+  default_prompt: "Use $nexus-naa to analyze this gamma spectrum and report QC, calibration evidence, peak candidates, and limitations."
+
+policy:
+  allow_implicit_invocation: true

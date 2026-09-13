@@ -1,0 +1,36 @@
+{
+  "schemaVersion": "1.0",
+  "datasetId": "nexus-naa-curated-gamma-lines-2026-09-04",
+  "title": "Curated decay gamma lines for Nexus-NAA v0.3 demonstration",
+  "scope": "A small verified subset for candidate-search validation; not a complete nuclear database.",
+  "retrievedAt": "2026-09-04",
+  "sources": {
+    "IAEA_ACTIVATION": {"name": "IAEA Gamma-ray energies and emission probabilities for activation products", "url": "https://www-nds.iaea.org/sgnucdat/safeg2008.pdf"},
+    "IAEA_NA24": {"name": "IAEA INDC(NDS)-0705 Na-24 evaluation", "url": "https://www-nds.iaea.org/publications/indc/indc-nds-0705.pdf"},
+    "NNDC_ENSDF": {"name": "NNDC NuDat 3 / current ENSDF", "url": "https://www.nndc.bnl.gov/nudat3/"},
+    "LNHB_DDEP": {"name": "LNHB Decay Data Evaluation Project", "url": "https://www.lnhb.fr/home/nuclear-data/"}
+  },
+  "lines": [
+    {"nuclide":"Am-241","element":"Am","energyKeV":59.5409,"intensityPercent":35.92,"mode":"decay","sourceId":"LNHB_DDEP"},
+    {"nuclide":"Ba-133","element":"Ba","energyKeV":80.9979,"intensityPercent":34.06,"mode":"decay","sourceId":"LNHB_DDEP"},
+    {"nuclide":"Ba-133","element":"Ba","energyKeV":276.3989,"intensityPercent":7.16,"mode":"decay","sourceId":"LNHB_DDEP"},
+    {"nuclide":"Ba-133","element":"Ba","energyKeV":302.8508,"intensityPercent":18.34,"mode":"decay","sourceId":"LNHB_DDEP"},
+    {"nuclide":"Ba-133","element":"Ba","energyKeV":356.0129,"intensityPercent":62.05,"mode":"decay","sourceId":"LNHB_DDEP"},
+    {"nuclide":"Ba-133","element":"Ba","energyKeV":383.8485,"intensityPercent":8.94,"mode":"decay","sourceId":"LNHB_DDEP"},
+    {"nuclide":"Cs-137","element":"Cs","energyKeV":661.657,"intensityPercent":85.1,"mode":"decay","sourceId":"LNHB_DDEP"},
+    {"nuclide":"Co-60","element":"Co","energyKeV":1173.228,"intensityPercent":99.85,"mode":"decay","sourceId":"LNHB_DDEP"},
+    {"nuclide":"Co-60","element":"Co","energyKeV":1332.492,"intensityPercent":99.9826,"mode":"decay","sourceId":"LNHB_DDEP"},
+    {"nuclide":"Na-22","element":"Na","energyKeV":511.0,"intensityPercent":180.7,"mode":"annihilation","sourceId":"LNHB_DDEP"},
+    {"nuclide":"Na-22","element":"Na","energyKeV":1274.537,"intensityPercent":99.94,"mode":"decay","sourceId":"LNHB_DDEP"},
+    {"nuclide":"K-40","element":"K","energyKeV":1460.822,"intensityPercent":10.55,"mode":"decay","sourceId":"IAEA_ACTIVATION"},
+    {"nuclide":"Mn-54","element":"Mn","energyKeV":834.848,"intensityPercent":99.976,"mode":"decay","sourceId":"LNHB_DDEP"},
+    {"nuclide":"Na-24","element":"Na","energyKeV":1368.626,"intensityPercent":99.9936,"mode":"activation decay","reaction":"Na-23(n,gamma)Na-24","sourceId":"IAEA_NA24"},
+    {"nuclide":"Na-24","element":"Na","energyKeV":2754.007,"intensityPercent":99.855,"mode":"activation decay","reaction":"Na-23(n,gamma)Na-24","sourceId":"IAEA_NA24"},
+    {"nuclide":"Al-28","element":"Al","energyKeV":1778.7,"intensityPercent":100.0,"mode":"activation decay","reaction":"Al-27(n,gamma)Al-28","sourceId":"NNDC_ENSDF"},
+    {"nuclide":"Ar-41","element":"Ar","energyKeV":1293.64,"intensityPercent":99.16,"mode":"activation decay","reaction":"Ar-40(n,gamma)Ar-41","sourceId":"IAEA_ACTIVATION"},
+    {"nuclide":"Mn-56","element":"Mn","energyKeV":846.77,"intensityPercent":98.9,"mode":"activation decay","reaction":"Mn-55(n,gamma)Mn-56","sourceId":"NNDC_ENSDF"},
+    {"nuclide":"Mn-56","element":"Mn","energyKeV":1810.7,"intensityPercent":26.9,"mode":"activation decay","reaction":"Mn-55(n,gamma)Mn-56","sourceId":"NNDC_ENSDF"},
+    {"nuclide":"Cr-51","element":"Cr","energyKeV":320.082,"intensityPercent":9.91,"mode":"activation decay","reaction":"Cr-50(n,gamma)Cr-51","sourceId":"NNDC_ENSDF"},
+    {"nuclide":"Au-198","element":"Au","energyKeV":411.802,"intensityPercent":95.62,"mode":"activation decay","reaction":"Au-197(n,gamma)Au-198","sourceId":"LNHB_DDEP"}
+  ]
+}

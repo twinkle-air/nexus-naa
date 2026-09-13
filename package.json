@@ -1,0 +1,14 @@
+{
+  "name": "nexus-naa",
+  "version": "0.4.0",
+  "private": false,
+  "license": "MIT",
+  "type": "module",
+  "scripts": {
+    "test": "node --test",
+    "check": "node --check src/core.js && node --check src/app.js && node --check src/workflow.js && node --check src/assistant.js && node --check src/demo.js && node --check src/report.js && node --check model.mjs && node --check server.mjs && node --test",
+    "start": "node server.mjs",
+    "mcp": "node mcp-server.mjs",
+    "validate:references": "node scripts/validate-reference-spectra.mjs"
+  }
+}
