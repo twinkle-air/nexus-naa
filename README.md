@@ -6,6 +6,10 @@
 
 > 本项目用于研究、教学和方法验证，不是经认证的实验室测量系统。数据库命中只构成候选证据；当前版本不包含效率刻度、照射/衰变修正、完整不确定度或经验证的元素定量，不能独立用于安全、监管或商业检测结论。
 
+## 智能体页面
+
+![Nexus-NAA v0.4 智能体工作台](assets/nexus-naa-workbench.png)
+
 ## v0.4 能力
 
 - CSV/TXT/DAT、ORTEC/GammaVision 文本 SPE、XLS/XLSX 统一导入与基础 QC；
@@ -73,3 +77,7 @@ HTML 包含完整谱、QC、标定、峰表、候选理由、来源、证据链�
 ## 开源与数据说明
 
 代码以 [MIT License](LICENSE) 发布。仓库中的核数据和参考谱保留各自来源、资格与限制说明；引用或再分发前请分别检查[data/NUCLEAR_DATA.md](data/NUCLEAR_DATA.md)、[data/SOURCES.md](data/SOURCES.md)及原始来源条款。提交 issue 时不要上传未脱敏的实验记录、API Key 或受限制数据。
+
+## 作者与反馈
+
+twinkle-air 邮箱：[twinkleair369@gmail.com](mailto:twinkleair369@gmail.com) 或者 [twinkle-air@qq.com](mailto:twinkle-air@qq.com)
