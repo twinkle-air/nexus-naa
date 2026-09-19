@@ -12,7 +12,7 @@ Nexus-NAA is an evidence-driven gamma-spectrum analysis agent for neutron activa
 
 ## 智能体页面
 
-![Nexus-NAA 智能体工作台示意（v0.4 阶段截图）](assets/nexus-naa-workbench.png)
+![Nexus-NAA V1.0 智能体工作台：右侧固定共享数据流、语言与使用指南入口](assets/nexus-naa-workbench.png)
 
 ## V1.0 能力
 

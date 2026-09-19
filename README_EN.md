@@ -10,7 +10,7 @@ Nexus-NAA is an evidence-driven gamma-spectrum analysis agent for neutron activa
 
 ## Agent Workbench
 
-![Nexus-NAA agent workbench (v0.4-stage screenshot)](assets/nexus-naa-workbench.png)
+![Nexus-NAA V1.0 agent workbench with the fixed shared-data-flow rail, language switch, and user guide](assets/nexus-naa-workbench.png)
 
 ## V1.0 Capabilities
 
