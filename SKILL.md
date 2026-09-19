@@ -1,8 +1,9 @@
 ---
 name: nexus-naa
-description: Import and analyze gamma spectra with Nexus-NAA for QC, user-supplied energy calibration, peak finding, nuclide candidate evidence, reproducible reports, and gamma-line lookup. Use for NAA or HPGe spectrum workflows; do not use it to claim confirmed identification or quantitative concentration without the missing experimental calibration and uncertainty controls.
+description: >-
+  Use Nexus-NAA for evidence-driven NAA or HPGe gamma-spectrum analysis (γ 能谱证据分析): spectrum import and QC, peak finding, user-referenced energy calibration, nuclide candidate evidence, gamma-line lookup, and traceable reports. 核素匹配仅是候选证据；未经实验刻度与不确定度控制，不得声称确认识别或定量结果。
 metadata:
-  short-description: Evidence-driven gamma spectrum analysis
+  short-description: γ 能谱证据分析 / Evidence-driven gamma-spectrum analysis
 ---
 
 # Nexus-NAA

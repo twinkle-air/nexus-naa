@@ -6,10 +6,19 @@ import {htmlReport} from './report.js';
 import {candidateReason} from './evidence-explanation.js';
 import {syntheticDemo} from './demo.js';
 const workspace=new Workspace();
+const $ = id => document.getElementById(id);
 let loadRevision=0;
 let manualPreparedFor='';
+let displayedGroups=null;
+const flowMedia=window.matchMedia('(max-width: 1199px)');
+let flowOpen=false;
+function syncFlowPresentation(){const compact=flowMedia.matches,panel=$('sharedFlow');if(!compact)flowOpen=false;panel.classList.toggle('open',compact&&flowOpen);panel.inert=compact&&!flowOpen;panel.setAttribute('aria-hidden',String(compact&&!flowOpen));$('flowToggle').setAttribute('aria-expanded',String(compact&&flowOpen));}
+$('flowToggle').onclick=()=>{flowOpen=!flowOpen;syncFlowPresentation();if(flowOpen)$('flowClose').focus()};
+$('flowClose').onclick=()=>{flowOpen=false;syncFlowPresentation();$('flowToggle').focus()};
+flowMedia.addEventListener('change',syncFlowPresentation);
+document.addEventListener('keydown',event=>{if(event.key==='Escape'&&flowMedia.matches&&flowOpen){flowOpen=false;syncFlowPresentation();$('flowToggle').focus()}});
+syncFlowPresentation();
 
-const $ = id => document.getElementById(id);
 const canvas = $("chart"), ctx = canvas.getContext("2d");
 let spectrum, qc, view, peaks = [], calibration = null, settings = {}, nuclearDb = null, matches = null, evidenceChain = null, logY = false, dragging = false, lastX = 0;
 const fmt = n => new Intl.NumberFormat("zh-CN", { maximumFractionDigits: 2 }).format(n);
@@ -22,7 +31,7 @@ async function loadText(text, name, bytes=null) {
 function sync(){spectrum=workspace.spectrum;qc=workspace.qc;peaks=workspace.peaks||[];calibration=workspace.calibration;matches=workspace.matches;evidenceChain=workspace.evidence;settings=workspace.settings;}
 function refresh(){sync();updateFlow();if(spectrum){renderUI();renderPeaks();renderMatches();draw();}if(!calibration)$('calResult').textContent='尚未标定';else $('calResult').textContent=`E = ${calibration.slope.toFixed(6)} C + (${calibration.intercept.toFixed(4)}) keV；RMSE ${calibration.rmse.toFixed(4)} keV\n残差：${calibration.points.map(p=>p.residualKeV.toFixed(4)).join(', ')}`;$('trace').textContent=JSON.stringify(workspace.trace,null,2);}
 function flow(id,text,ready){$(id).textContent=text;$(id).classList.toggle('ready',ready)}
-function updateFlow(){flow('flowData',`① 导入谱：${spectrum?'已共享':'等待'}`,Boolean(spectrum));flow('flowPeaks',`② 寻峰：${workspace.peaks===null?'等待':`已完成 (${workspace.peaks.length})`}`,workspace.peaks!==null);flow('flowCalibration',`③ 标定：${calibration?'已应用':'可选/未完成'}`,Boolean(calibration));flow('flowCandidates',`④ 候选：${workspace.matches===null?'等待':`已完成 (${workspace.matches.length} 峰组)`}；报告${spectrum?'可用':'等待'}`,workspace.matches!==null);}
+function updateFlow(){flow('flowData',`① 导入谱：${spectrum?'已共享':'等待'}`,Boolean(spectrum));flow('flowPeaks',`② 寻峰：${workspace.peaks===null?'等待':`已完成 (${workspace.peaks.length})`}`,workspace.peaks!==null);flow('flowCalibration',`③ 标定：${calibration?'已应用':'可选/未完成'}`,Boolean(calibration));flow('flowCandidates',`④ 候选：${workspace.matches===null?'等待':`已完成 (${workspace.matches.length} 峰组)`}；报告${spectrum?'可用':'等待'}`,workspace.matches!==null);const stage=!spectrum?1:workspace.peaks===null?2:!calibration?3:4;$('phase').textContent=`第${'一二三四'[stage-1]}阶段${workspace.matches!==null?'（已完成）':''} · V1.0`;$('flowToggle').textContent=`进度 · 第${'一二三四'[stage-1]}阶段${workspace.matches!==null?'（已完成）':''}`;}
 function options(){return {calibrationText:$('calPoints').value,settings:{smoothingWindow:Number($('smooth').value),minProminencePercent:Number($('prominence').value),minDistance:Number($('distance').value),detectionMode:$('detectionMode').value,minSignificance:Number($('significance').value),snipIterations:Number($('snipIterations').value),fitOverlaps:$('fitOverlaps').checked},matchSettings:{toleranceKeV:Number($('tolerance').value),topN:Number($('topN').value)}};}
 async function sha256(bytes){const hash=await crypto.subtle.digest("SHA-256",bytes);return [...new Uint8Array(hash)].map(v=>v.toString(16).padStart(2,"0")).join("")}
 function decodeSpectrumText(bytes){try{return new TextDecoder('utf-8',{fatal:true}).decode(bytes)}catch{return new TextDecoder('gb18030',{fatal:true}).decode(bytes)}}
@@ -70,6 +79,7 @@ function renderPeaks(){
 }
 function statusLabel(value){return ({supported:"有伴随峰支持",tentative:"暂定候选",conflicting:"存在冲突",insufficient_evidence:"证据不足"})[value]||value}
 function renderMatches(groups=matches){
+  displayedGroups=groups;
   if(!groups?.length){$("candidateResults").innerHTML=`<div class="no-candidates">完成标定并匹配后，在此显示 Top-N 候选、能量差、伴随峰和证据等级。</div>`;return}
   $("candidateResults").innerHTML=groups.map(group=>`<section class="match-group"><h3>峰 ${group.peakId??"查询"} · ${fmt(group.measuredEnergyKeV)} keV · 结论：${group.candidates.length?"仅候选":"证据不足"}</h3>${group.candidates.length?group.candidates.map(c=>{const found=c.companions?.filter(x=>x.foundPeakId!=null).length??0,total=c.companions?.length??0,reason=candidateReason(c,found,total,group.toleranceKeV,window.uiLanguage?.()||'zh').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;');return `<div class="candidate"><strong>${c.nuclide} · ${fmt(c.energyKeV)} keV</strong><span>ΔE ${c.deltaKeV>=0?"+":""}${c.deltaKeV.toFixed(4)} keV</span><span class="score">评分 ${c.score??"—"}</span><span tabindex="0" class="status ${c.status||"insufficient_evidence"}" data-tooltip="${reason}" aria-label="${statusLabel(c.status||"insufficient_evidence")}：${reason}">${statusLabel(c.status||"insufficient_evidence")}</span><small>伴随峰 ${found}/${total}（未观察到不等于不存在） · <a href="${c.sourceUrl||c.source.url}" target="_blank" rel="noreferrer">${c.sourceId}</a></small></div>`}).join(""):`<div class="no-candidates">容差范围内无数据库记录：证据不足</div>`}</section>`).join("");
 }
@@ -111,7 +121,7 @@ $('quickQuery').onclick=()=>{const energy=$('quickEnergy').value.trim();$('datab
 $('databaseFilter').oninput=renderDatabaseTable;
 $('closeDatabase').onclick=()=>$('databaseDialog').close();
 $('databaseDialog').onclick=e=>{if(e.target===e.currentTarget)e.currentTarget.close()};
-window.addEventListener('nexus-language-change',()=>{if(nuclearDb&&$('databaseDialog').open)renderDatabaseTable();if(matches)renderMatches()});
+window.addEventListener('nexus-language-change',()=>{if(nuclearDb)renderDatabaseTable();renderMatches(displayedGroups)});
 $('assistantForm').onsubmit=async event=>{event.preventDefault();const prompt=$('prompt').value.trim();if(!prompt)return;const revision=workspace.revision;$('send').disabled=true;try{
   const mode=$('assistantMode').value;let plan,provenance;
   if(mode==='manual'){const prepared=manualPrompt(prompt);if(manualPreparedFor!==prompt){manualPreparedFor=prompt;$('manualPrompt').value=prepared;$('manualResponse').value='';$('answer').textContent='已生成完整路由提示。请将它发送给当前真实模型，原样粘贴 JSON 回复后再次执行。';return}plan=validatePlanForPrompt(parseModelPlan($('manualResponse').value),prompt);provenance={provider:'manual',model:$('modelName').value.trim()||'unlabeled',origin:'user_pasted_not_authenticated'};}

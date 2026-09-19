@@ -1,16 +1,18 @@
-# Nexus-NAA · v0.4
+# Nexus-NAA · V1.0
+
+[中文](README.md)
 
 > An evidence-driven intelligent analysis platform and Agent Skill for neutron activation analysis
 
-Nexus-NAA is a local gamma-ray spectrum analysis prototype that provides an end-to-end workflow: spectrum import → quality control → peak detection → user-supplied reference-point calibration → nuclide candidates and supporting evidence → HTML reporting. Its natural-language interface, MCP tools, and manual controls all use the same deterministic scientific workflow.
+Nexus-NAA is an evidence-driven gamma-spectrum analysis agent for neutron activation analysis (NAA). It supports spectrum import and QC, peak finding, user-referenced energy calibration, nuclide candidate evidence, and traceable reports through a local workbench, MCP tools, and an HTTP API. Its natural-language interface and manual controls share the same deterministic scientific workflow.
 
-> This project is intended for research, education, and method validation. It is not a certified laboratory measurement system. A database match is candidate evidence only. The current release does not include efficiency calibration, irradiation/decay corrections, complete uncertainty evaluation, or validated elemental quantification, and must not be used on its own for safety, regulatory, or commercial testing conclusions.
+> This project is intended for research, education, and method validation. It is not a certified laboratory measurement system. A database match is candidate evidence only. The current release does not include efficiency calibration, irradiation/decay corrections, complete uncertainty evaluation, or validated elemental quantification, and must not be used on its own for safety, regulatory, or commercial testing conclusions. V1.0 is the software release and registration version; its scientific feature scope remains that of v0.4. Analysis JSON retains schema version 0.4 for compatibility with saved files.
 
 ## Agent Workbench
 
-![Nexus-NAA v0.4 agent workbench](assets/nexus-naa-workbench.png)
+![Nexus-NAA agent workbench (v0.4-stage screenshot)](assets/nexus-naa-workbench.png)
 
-## Features in v0.4
+## V1.0 Capabilities
 
 - Unified import and basic QC for CSV/TXT/DAT, ORTEC/GammaVision text SPE, and XLS/XLSX files
 - Local Poisson-significance peak detection, experimental SNIP background estimation, and adjacent-doublet Gaussian fitting
@@ -74,7 +76,7 @@ Supported inputs are CSV/TXT/DAT, ORTEC/GammaVision text SPE, and XLS/XLSX. Deli
 
 For XLS/XLSX files on Windows, Nexus-NAA first attempts to use an installed copy of Microsoft Excel. The server disables macros and link updates and opens a temporary upload copy in read-only mode. If Excel COM is unavailable because of the login session or installation state, the program automatically falls back to the repository-pinned xlrd/openpyxl read-only parser. Temporary upload copies are deleted immediately after conversion.
 
-The **Shared Data Flow** area at the top of the interface shows the current spectrum, peak list, calibration, and candidate status. Every section uses the same Workspace. Replacing the input file or changing an upstream parameter automatically clears dependent downstream results.
+The fixed **Shared Data Flow** rail on the right side of the interface shows the current spectrum, peak list, calibration, and candidate status. Every section uses the same Workspace. Replacing the input file or changing an upstream parameter automatically clears dependent downstream results.
 
 The default peak detector uses local Poisson significance so that a very intense peak does not raise a single whole-spectrum threshold and hide weaker peaks. The earlier whole-spectrum proportional mode remains available for comparison. An experimental SNIP background mode and a local two-Gaussian fit for adjacent peaks are also provided. SNIP uses a log-log-square-root transform and a decreasing clipping window; for regression against user reference spectra, `8σ` is a recommended starting point. SNIP is not superior to the default mode for every spectrum. Gaussian results are stored in the peak record's `overlapFit` field. The fit operates only on adjacent peaks that have already been detected and does not automatically split a broad peak into multiple components.
 

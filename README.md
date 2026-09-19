@@ -1,16 +1,20 @@
-# Nexus-NAA · v0.4
+# Nexus-NAA · V1.0
+
+[English](README_EN.md)
 
 > 面向中子活化分析的证据驱动智能分析平台与 Agent Skill
 
 本地 γ 能谱分析原型：读谱 → QC → 寻峰 → 用户参考点标定 → 核素候选与证据 → HTML 报告。自然语言入口、MCP 工具和手动按钮共用同一套确定性科学工作流。
 
-> 本项目用于研究、教学和方法验证，不是经认证的实验室测量系统。数据库命中只构成候选证据；当前版本不包含效率刻度、照射/衰变修正、完整不确定度或经验证的元素定量，不能独立用于安全、监管或商业检测结论。
+Nexus-NAA is an evidence-driven gamma-spectrum analysis agent for neutron activation analysis (NAA). It supports spectrum import and QC, peak finding, user-referenced energy calibration, nuclide candidate evidence, and traceable reports through a local workbench, MCP tools, and an HTTP API. Matches are candidates, not confirmed identifications; quantitative analysis requires further experimental calibration and uncertainty controls.
+
+> 本项目用于研究、教学和方法验证，不是经认证的实验室测量系统。数据库命中只构成候选证据；当前版本不包含效率刻度、照射/衰变修正、完整不确定度或经验证的元素定量，不能独立用于安全、监管或商业检测结论。V1.0 是软件发布与登记版本号，沿用此前 v0.4 的科学功能范围；分析 JSON 的格式版本 0.4 保持不变，以兼容已保存文件。
 
 ## 智能体页面
 
-![Nexus-NAA v0.4 智能体工作台](assets/nexus-naa-workbench.png)
+![Nexus-NAA 智能体工作台示意（v0.4 阶段截图）](assets/nexus-naa-workbench.png)
 
-## v0.4 能力
+## V1.0 能力
 
 - CSV/TXT/DAT、ORTEC/GammaVision 文本 SPE、XLS/XLSX 统一导入与基础 QC；
 - 局部泊松显著性寻峰、实验性 SNIP 本底和相邻双峰 Gaussian 拟合；
@@ -47,7 +51,7 @@ python scripts/install.py --tool codex --scope project --project-root /path/to/p
 
 XLS/XLSX 优先使用 Windows 上已安装的 Microsoft Excel：服务端禁用宏和更新链接、只读打开上传的临时副本。若 Excel COM 因登录会话或安装状态不可用，则自动切换到项目固定版本的 xlrd/openpyxl 只读解析器；转换完成后立即删除上传副本。
 
-界面顶部的“共享数据流”显示当前谱、峰列表、标定和候选状态。所有功能区共用同一个 Workspace；更换文件或修改上游参数会自动清除相关下游结果。
+页面右侧固定的“共享数据流”进度栏显示当前谱、峰列表、标定和候选状态。所有功能区共用同一个 Workspace；更换文件或修改上游参数会自动清除相关下游结果。
 
 寻峰默认采用局部泊松显著性，避免最高强峰把全谱统一阈值抬高而漏掉弱峰；旧版全谱比例模式仍可对照。另提供实验性的SNIP本底模式和相邻峰双Gaussian局部拟合。SNIP基于LLS变换与递减裁剪窗口，用户标准谱回归建议以8σ作为起点；它并未在所有谱上优于默认模式。Gaussian结果保存在峰记录的 `overlapFit` 中，只处理已经找到的相邻双峰，不自动把宽峰拆成多个峰。
 
@@ -72,7 +76,7 @@ HTML 包含完整谱、QC、标定、峰表、候选理由、来源、证据链�
 [智能体、MCP 与 HTTP API 接入](docs/AGENT_INTEGRATION.md)
 [方法与数据改进依据](docs/research-basis.md)
 [用户标准谱回归结果](docs/REFERENCE_VALIDATION.md) · [ENSDF可复现导入流程](docs/ENSDF_PIPELINE.md)
-这是简化四阶段原型，不含重叠峰拟合、不确定度、效率刻度及元素定量，不代表原始大型平台方案全部完成。
+这是简化四阶段原型；可选的相邻双峰局部拟合仍属实验功能，不含完整不确定度评定、效率刻度及元素定量，不代表原始大型平台方案全部完成。
 
 ## 开源与数据说明
 
