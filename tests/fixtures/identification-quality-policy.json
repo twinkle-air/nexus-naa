@@ -1,0 +1,11 @@
+{
+  "schemaVersion": "1.0",
+  "system": "full_evidence",
+  "scope": "fixed_label_assisted_reference_regression",
+  "thresholds": {
+    "maxNonReferenceSupportedCount": 0,
+    "maxUnsupportedDefinitiveCount": 0,
+    "minTop1ReferenceRetentionRate": 1,
+    "minMeanTop3ReferenceRecall": 1
+  }
+}

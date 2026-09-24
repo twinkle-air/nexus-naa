@@ -18,10 +18,10 @@ createServer(async (req, res) => {
       if(req.headers.origin&&req.headers.origin!==`http://${req.headers.host}`){res.writeHead(403);return res.end();}
       try{const filename=decodeURIComponent(String(req.headers['x-filename']||''));const converted=await importSpreadsheet(await readBytes(req,20_000_000),filename);res.writeHead(200,{'Content-Type':'application/json'});return res.end(JSON.stringify(converted));}catch(e){res.writeHead(400,{'Content-Type':'application/json'});return res.end(JSON.stringify({error:e.message}));}
     }
-    if(req.url==='/api/v1/tools'&&req.method==='GET'){res.writeHead(200,{'Content-Type':'application/json'});return res.end(JSON.stringify({version:'0.4.0',tools:agentTools}));}
+    if(req.url==='/api/v1/tools'&&req.method==='GET'){res.writeHead(200,{'Content-Type':'application/json'});return res.end(JSON.stringify({version:'1.3.0',tools:agentTools}));}
     if(req.url?.startsWith('/api/v1/tools/')&&req.method==='POST'){
       if(req.headers.origin&&req.headers.origin!==`http://${req.headers.host}`){res.writeHead(403);return res.end();}
-      try{const name=decodeURIComponent(req.url.slice('/api/v1/tools/'.length));const limit=name==='nexus_import_spectrum'?27_000_000:10_500_000,result=await executeAgentTool(name,await readJson(req,limit));res.writeHead(200,{'Content-Type':'application/json'});return res.end(JSON.stringify(result));}catch(e){res.writeHead(400,{'Content-Type':'application/json'});return res.end(JSON.stringify({error:e.message}));}
+      try{const name=decodeURIComponent(req.url.slice('/api/v1/tools/'.length));const limit=name==='nexus_import_spectrum'?27_000_000:10_500_000,result=await executeAgentTool(name,await readJson(req,limit));res.writeHead(200,{'Content-Type':'application/json'});return res.end(JSON.stringify(result));}catch(e){res.writeHead(400,{'Content-Type':'application/json'});return res.end(JSON.stringify({error:{code:e.code||'TOOL_ERROR',message:e.message}}));}
     }
     if(req.url==='/api/assistant' && req.method==='POST'){
       if(req.headers.origin && req.headers.origin!==`http://${req.headers.host}`){res.writeHead(403);return res.end();}

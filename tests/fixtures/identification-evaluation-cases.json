@@ -1,0 +1,41 @@
+{
+  "schemaVersion": "1.0",
+  "cases": [
+    {
+      "filename": "Co-60.xls",
+      "calibrationNuclide": "Co-60",
+      "expected": ["Co-60"],
+      "calibrationMode": "label_assisted_known_source",
+      "sampleClass": "pure_reference",
+      "truthQualification": "source_label_only",
+      "accuracyEligible": false
+    },
+    {
+      "filename": "Eu-152.xls",
+      "calibrationNuclide": "Eu-152",
+      "expected": ["Eu-152"],
+      "calibrationMode": "label_assisted_known_source",
+      "sampleClass": "pure_reference",
+      "truthQualification": "source_label_only",
+      "accuracyEligible": false
+    },
+    {
+      "filename": "Ba-133_Cs-137.xls",
+      "calibrationNuclide": "Ba-133",
+      "expected": ["Ba-133", "Cs-137"],
+      "calibrationMode": "label_assisted_known_source",
+      "sampleClass": "mixed_reference",
+      "truthQualification": "source_label_only",
+      "accuracyEligible": false
+    }
+  ],
+  "coverageGaps": [
+    "independent_calibration",
+    "blind_unknown_labels",
+    "blank_spectrum",
+    "target_absent_negative_sample",
+    "certified_mixture_truth",
+    "low_count_truth",
+    "interference_truth"
+  ]
+}

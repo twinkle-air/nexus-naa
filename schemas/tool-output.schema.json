@@ -1,0 +1,16 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/twinkle-air/nexus-naa/schemas/tool-output.schema.json",
+  "title": "Nexus-NAA tool outputs V1.3",
+  "$defs": {
+    "summary": { "type": "object", "required": ["filename", "qc", "totalCounts", "calibrated", "calibrationStatus", "peakCount", "nuclideCandidates", "candidates", "warnings"], "additionalProperties": false, "properties": { "filename": { "type": "string" }, "qc": { "enum": ["pass", "warning"] }, "totalCounts": { "type": "number" }, "calibrated": { "type": "boolean" }, "calibrationStatus": { "type": ["string", "null"] }, "peakCount": { "type": ["integer", "null"] }, "nuclideCandidates": { "type": ["array", "null"], "items": { "$ref": "evidence.schema.json" } }, "candidates": { "type": "array" }, "warnings": { "type": "array", "items": { "type": "string" } } } },
+    "import": { "type": "object", "required": ["spectrumText", "warnings", "converter"], "properties": { "spectrumText": { "type": "string" }, "warnings": { "type": "array", "items": { "type": "string" } }, "converter": { "type": "string" } }, "additionalProperties": false },
+    "quality": { "type": "object", "required": ["spectrum", "qc", "blocking"], "properties": { "spectrum": { "type": "object", "required": ["filename", "format", "sha256"] }, "qc": { "type": "object", "required": ["level", "checks", "summary"] }, "blocking": { "type": "array", "items": { "type": "string" } } }, "additionalProperties": false },
+    "calibration": { "type": "object", "required": ["calibration", "warnings"], "properties": { "calibration": { "type": "object", "required": ["model", "slope", "intercept", "pointCount", "validationStatus", "referenceRangeKeV"] }, "warnings": { "type": "array", "items": { "type": "string" } } }, "additionalProperties": false },
+    "analysisEnvelope": { "type": "object", "required": ["summary", "result"], "properties": { "summary": { "$ref": "#/$defs/summary" }, "result": { "$ref": "analysis-result.schema.json" } }, "additionalProperties": false },
+    "rank": { "type": "object", "required": ["summary", "nuclideCandidates", "result"], "properties": { "summary": { "$ref": "#/$defs/summary" }, "nuclideCandidates": { "type": "array", "items": { "$ref": "evidence.schema.json" } }, "result": { "$ref": "analysis-result.schema.json" } }, "additionalProperties": false },
+    "query": { "type": "object", "required": ["summary", "query", "database"], "properties": { "summary": { "type": "string" }, "query": { "type": "object", "required": ["energyKeV", "toleranceKeV", "rows"] }, "database": { "type": "object", "required": ["datasetId", "scope"] } }, "additionalProperties": false },
+    "validation": { "$ref": "validation-result.schema.json" },
+    "report": { "type": "object", "required": ["summary", "validation", "analysisFingerprint", "filename", "mediaType", "html"], "properties": { "summary": { "$ref": "#/$defs/summary" }, "validation": { "$ref": "validation-result.schema.json" }, "analysisFingerprint": { "type": "string", "pattern": "^sha256-[a-f0-9]{64}$" }, "filename": { "type": "string" }, "mediaType": { "const": "text/html" }, "html": { "type": "string" } }, "additionalProperties": false }
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/twinkle-air/nexus-naa/schemas/validation-result.schema.json",
+  "title": "Nexus-NAA validation result V1.3",
+  "type": "object",
+  "required": ["valid", "errors", "warnings", "checks", "fingerprint", "validatedAt", "validatorVersion"],
+  "properties": {
+    "valid": { "type": "boolean" },
+    "errors": { "type": "array", "items": { "$ref": "#/$defs/message" } },
+    "warnings": { "type": "array", "items": { "$ref": "#/$defs/message" } },
+    "checks": { "type": "array", "items": { "type": "object", "required": ["code", "status", "detail"], "properties": { "code": { "type": "string" }, "status": { "enum": ["pass", "fail", "warning"] }, "detail": { "type": "string" } }, "additionalProperties": false } },
+    "fingerprint": { "type": ["string", "null"], "pattern": "^sha256-[a-f0-9]{64}$" }, "validatedAt": { "type": "string" }, "validatorVersion": { "const": "1.3.0" }
+  },
+  "$defs": { "message": { "type": "object", "required": ["code", "message"], "properties": { "code": { "type": "string" }, "message": { "type": "string" } }, "additionalProperties": false } },
+  "additionalProperties": false
+}

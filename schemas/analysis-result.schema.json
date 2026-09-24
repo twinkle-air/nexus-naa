@@ -1,0 +1,20 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/twinkle-air/nexus-naa/schemas/analysis-result.schema.json",
+  "title": "Nexus-NAA analysis result V1.3",
+  "type": "object",
+  "required": ["schemaVersion", "skillContractVersion", "softwareVersion", "revision", "generatedAt", "source", "spectrum", "qc", "calibration", "peakSearch", "matchSettings", "peaks", "matching", "nuclideCandidates", "evidence", "database", "trace", "warnings"],
+  "properties": {
+    "schemaVersion": { "const": "0.4" }, "skillContractVersion": { "const": "1.3.0" }, "softwareVersion": { "const": "1.3.0" },
+    "revision": { "type": "integer", "minimum": 1 }, "generatedAt": { "type": "string" },
+    "source": { "type": "object", "required": ["filename", "sha256"], "properties": { "filename": { "type": "string" }, "sha256": { "type": ["string", "null"], "pattern": "^[a-fA-F0-9]{64}$" } }, "additionalProperties": false },
+    "spectrum": { "type": "object", "required": ["filename", "format", "channels", "counts", "warnings", "sha256"], "properties": { "filename": { "type": "string" }, "format": { "type": "string" }, "channels": { "type": "array", "items": { "type": "integer", "minimum": 0 }, "minItems": 1 }, "counts": { "type": "array", "items": { "type": "number", "minimum": 0 }, "minItems": 1 }, "warnings": { "type": "array", "items": { "type": "string" } }, "sha256": { "type": ["string", "null"], "pattern": "^[a-fA-F0-9]{64}$" } }, "additionalProperties": false },
+    "qc": { "type": "object", "required": ["level", "checks", "summary"], "properties": { "level": { "enum": ["pass", "warning"] }, "checks": { "type": "array" }, "summary": { "type": "object" } }, "additionalProperties": false },
+    "calibration": { "type": ["object", "null"] }, "peakSearch": { "type": "object" }, "matchSettings": { "type": "object" },
+    "peaks": { "type": ["array", "null"] }, "matching": { "type": ["array", "null"] },
+    "nuclideCandidates": { "type": ["array", "null"], "items": { "$ref": "evidence.schema.json" } },
+    "evidence": { "type": ["object", "null"] },
+    "database": { "type": ["object", "null"] }, "trace": { "type": "array" }, "warnings": { "type": "array", "items": { "type": "string" } }
+  },
+  "additionalProperties": false
+}

@@ -9,7 +9,7 @@ const translations = new Map(Object.entries({
   'HTML 报告已交给浏览器下载，请查看下载列表。报告包含当前完整谱与分析结果。':'The HTML report was sent to browser downloads and includes the complete current spectrum and analysis.',
   'SPE 的 $DATA 区段已导入并共享给全部功能区。':'The SPE $DATA section was imported and shared across all sections.',
   'Excel 中最长的两列数值数据已只读导入并共享给全部功能区。':'The longest two-column numeric table in Excel was imported read-only and shared across all sections.',
-  '证据驱动能谱工作区':'Evidence-driven spectrum workspace','当前分析进度':'Current analysis progress','收起进度':'Close progress','中子活化分析助手 · V1.0':'NAA Copilot · V1.0',
+  '证据驱动能谱工作区':'Evidence-driven spectrum workspace','当前分析进度':'Current analysis progress','收起进度':'Close progress','中子活化分析助手 · V1.3':'NAA Copilot · V1.3',
   '能谱视图':'SPECTRUM VIEW','质量检查':'QUALITY CONTROL','能谱摘要':'SPECTRUM SUMMARY','寻峰设置':'PEAK SEARCH','能量标定':'ENERGY CALIBRATION','寻峰结果':'PEAK RESULTS','核素候选与证据':'NUCLIDE CANDIDATES & EVIDENCE','通过':'PASS','需复核':'WARNING','对数纵轴':'LOG Y','线性纵轴':'LINEAR Y','视图':'VIEW','通道':'Channel','计数':'Counts','全谱峰突出度':'Global prominence','半高全宽 / 通道':'FWHM / ch','积分区间':'ROI','候选数量':'Top-N','快捷操作':'Quick actions',
   '恢复分析 JSON':'Restore analysis JSON','发送给当前模型的完整提示':'Complete prompt for the current model','粘贴模型的原始 JSON 回复':'Paste the original model JSON response','例如 {"action":"analyze"}':'e.g. {"action":"analyze"}',
   '第一步生成提示并交给任意真实模型；第二步粘贴原始回复后再次执行。应用能验证输出契约，但不能认证回复确由哪个模型生成。':'First generate a prompt and send it to a real model. Then paste its original response and run again. The app validates the response contract but cannot authenticate its model of origin.',
@@ -36,7 +36,7 @@ const translations = new Map(Object.entries({
   '对相邻峰执行双 Gaussian 局部拟合（实验）':'Fit adjacent peaks with a local double Gaussian (experimental)',
   '线性能量标定':'Linear energy calibration','已知标准源':'Known reference source','请选择':'Select','根据当前谱自动填入':'Auto-fill from current spectrum','拟合并应用':'Fit and apply','尚未标定':'Not calibrated','峰结果':'Peak results','恢复分析':'Restore analysis','导出 CSV':'Export CSV','保存分析 JSON':'Save analysis JSON','质心通道':'Centroid channel','能量 / keV':'Energy / keV','峰高':'Peak height','局部显著性 / σ':'Local significance / σ','净面积*':'Net area*',
   '核素候选辅助判断':'Nuclide candidate assessment','必须先完成能量标定。数据库命中只生成候选，不输出“确定检出”。':'Energy calibration is required. Database matches produce candidates, not confirmed detections.','容差 / keV':'Tolerance / keV','匹配全部峰':'Match all peaks','单能量查询':'Single-energy query','查询数据库':'Query database','核数据范围与来源':'Nuclear-data scope and sources',
-  '导入一份能谱，工作区将在这里展开':'Import a spectrum to open the workspace','核心算法离线运行 · V1.0 核素候选及报告':'Core algorithms run offline · V1.0 candidates and reports','谱数据来源':'Spectrum sources','核数据来源':'Nuclear-data sources','方法说明':'Methods',
+  '导入一份能谱，工作区将在这里展开':'Import a spectrum to open the workspace','核心算法离线运行 · V1.3 可验证核素候选及报告':'Core algorithms run offline · V1.3 validated candidates and reports','谱数据来源':'Spectrum sources','核数据来源':'Nuclear-data sources','方法说明':'Methods',
   '语言':'Language','使用指南':'User guide','关闭':'Close','快速开始':'Quick start','导入与检查':'Import and inspect','寻峰与标定':'Peaks and calibration','候选与报告':'Candidates and reports','智能体接入':'Agent integration',
   '核数据浏览器':'Nuclear Data Browser','筛选核素或能量':'Filter nuclide or energy','例如 Ba-133 或 356.0129':'e.g. Ba-133 or 356.0129','表中数据用于候选匹配，不代表实测检出。':'Table data supports candidate matching and does not represent measured detection.','核素':'Nuclide','发射概率 / %':'Emission probability / %','来源':'Source','数据资格':'Data qualification',
   '保存的 JSON 可恢复当前谱、参数和分析结果；机器字段名保持稳定，不随显示语言改变。':'Saved JSON can restore the spectrum, settings and analysis results; machine field names remain stable across display languages.',
@@ -55,7 +55,7 @@ function translateValue(value){
   if(value.includes('\n'))return value.split('\n').map(translateValue).join('\n');
   return value
     .replace(/进度 · 第([一二三四])阶段(（已完成）)?/g,(_,number,done)=>`Progress · Phase ${'一二三四'.indexOf(number)+1}${done?' (complete)':''}`)
-    .replace(/第([一二三四])阶段(（已完成）)? · V1\.0/g,(_,number,done)=>`Phase ${'一二三四'.indexOf(number)+1}${done?' (complete)':''} · V1.0`)
+    .replace(/第([一二三四])阶段(（已完成）)? · V1\.3/g,(_,number,done)=>`Phase ${'一二三四'.indexOf(number)+1}${done?' (complete)':''} · V1.3`)
     .replace(/^文件：/,'File: ').replace(/QC：(PASS|WARNING)；总计数 (.*?)。/g,'QC: $1; total counts $2.')
     .replace(/检出 (\d+) 个候选峰/g,'Found $1 candidate peaks').replace(/尚未寻峰/g,'Peak search pending')
     .replace(/；已按用户参考点标定。/g,'; calibrated using user reference points.').replace(/；缺少标定，请输入至少两个参考点。/g,'; calibration required: enter at least two reference points.')

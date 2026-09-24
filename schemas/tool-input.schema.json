@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/twinkle-air/nexus-naa/schemas/tool-input.schema.json",
+  "title": "Nexus-NAA tool inputs V1.3",
+  "$defs": {
+    "peakSettings": { "type": "object", "properties": { "smoothingWindow": { "type": "integer", "minimum": 1, "maximum": 101 }, "minProminencePercent": { "type": "number", "exclusiveMinimum": 0, "maximum": 100 }, "minDistance": { "type": "integer", "minimum": 1 }, "detectionMode": { "enum": ["adaptive", "snip", "global"] }, "minSignificance": { "type": "number", "minimum": 2, "maximum": 20 }, "snipIterations": { "type": "integer", "minimum": 1, "maximum": 200 }, "fitOverlaps": { "type": "boolean" } }, "additionalProperties": false },
+    "matchSettings": { "type": "object", "properties": { "toleranceKeV": { "type": "number", "exclusiveMinimum": 0 }, "topN": { "type": "integer", "minimum": 1, "maximum": 10 } }, "additionalProperties": false },
+    "import": { "type": "object", "required": ["filename"], "properties": { "filename": { "type": "string", "minLength": 1 }, "fileText": { "type": "string" }, "fileBase64": { "type": "string" } }, "anyOf": [{ "required": ["fileText"] }, { "required": ["fileBase64"] }], "additionalProperties": false },
+    "spectrum": { "type": "object", "required": ["spectrumText"], "properties": { "spectrumText": { "type": "string", "minLength": 1, "maxLength": 10000000 }, "filename": { "type": "string" } }, "additionalProperties": false },
+    "calibration": { "type": "object", "required": ["calibrationText"], "properties": { "calibrationText": { "type": "string", "minLength": 1 } }, "additionalProperties": false },
+    "analysis": { "type": "object", "required": ["spectrumText"], "properties": { "spectrumText": { "type": "string", "minLength": 1, "maxLength": 10000000 }, "filename": { "type": "string" }, "calibrationText": { "type": "string" }, "settings": { "$ref": "#/$defs/peakSettings" }, "matchSettings": { "$ref": "#/$defs/matchSettings" } }, "additionalProperties": false },
+    "analysisReport": { "type": "object", "required": ["spectrumText"], "properties": { "spectrumText": { "type": "string", "minLength": 1, "maxLength": 10000000 }, "filename": { "type": "string" }, "calibrationText": { "type": "string" }, "settings": { "$ref": "#/$defs/peakSettings" }, "matchSettings": { "$ref": "#/$defs/matchSettings" }, "language": { "enum": ["zh", "en"] } }, "additionalProperties": false },
+    "rank": { "type": "object", "required": ["spectrumText", "calibrationText"], "properties": { "spectrumText": { "type": "string", "minLength": 1, "maxLength": 10000000 }, "filename": { "type": "string" }, "calibrationText": { "type": "string", "minLength": 1 }, "settings": { "$ref": "#/$defs/peakSettings" }, "matchSettings": { "$ref": "#/$defs/matchSettings" } }, "additionalProperties": false },
+    "query": { "type": "object", "required": ["energyKeV"], "properties": { "energyKeV": { "type": "number", "exclusiveMinimum": 0 }, "toleranceKeV": { "type": "number", "exclusiveMinimum": 0 }, "topN": { "type": "integer", "minimum": 1, "maximum": 10 } }, "additionalProperties": false },
+    "validation": { "type": "object", "required": ["analysis"], "properties": { "analysis": { "$ref": "analysis-result.schema.json" } }, "additionalProperties": false },
+    "reportFromAnalysis": { "type": "object", "required": ["analysis"], "properties": { "analysis": { "$ref": "analysis-result.schema.json" }, "language": { "enum": ["zh", "en"] } }, "additionalProperties": false }
+  }
+}

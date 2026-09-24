@@ -1,4 +1,4 @@
-# Nexus-NAA · V1.0
+# Nexus-NAA · V1.3
 
 [中文](README.md)
 
@@ -6,13 +6,22 @@
 
 Nexus-NAA is an evidence-driven gamma-spectrum analysis agent for neutron activation analysis (NAA). It supports spectrum import and QC, peak finding, user-referenced energy calibration, nuclide candidate evidence, and traceable reports through a local workbench, MCP tools, and an HTTP API. Its natural-language interface and manual controls share the same deterministic scientific workflow.
 
-> This project is intended for research, education, and method validation. It is not a certified laboratory measurement system. A database match is candidate evidence only. The current release does not include efficiency calibration, irradiation/decay corrections, complete uncertainty evaluation, or validated elemental quantification, and must not be used on its own for safety, regulatory, or commercial testing conclusions. V1.0 is the software release and registration version; its scientific feature scope remains that of v0.4. Analysis JSON retains schema version 0.4 for compatibility with saved files.
+> This project is intended for research, education, and method validation. It is not a certified laboratory measurement system. A database match is candidate evidence only. The current release does not include efficiency calibration, irradiation/decay corrections, complete uncertainty evaluation, or validated elemental quantification, and must not be used on its own for safety, regulatory, or commercial testing conclusions. V1.3 separates broad candidate retrieval from narrow support qualification, adds line-independence review, SHA-256 analysis fingerprints, and an executable identification quality gate. Analysis JSON retains schema version 0.4.
 
 ## Agent Workbench
 
-![Nexus-NAA V1.0 agent workbench with the fixed shared-data-flow rail, language switch, and user guide](assets/nexus-naa-workbench.png)
+![Nexus-NAA V1.3 running workbench with the assistant, shared data flow, and spectrum import area](assets/nexus-naa-workbench-v1.3.png)
 
-## V1.0 Capabilities
+## Changelog
+
+- **V1.3 (2026-09-24):** Broad tolerance retains candidates; a narrower support window and line-independence checks determine `supported` status. Added canonical JSON SHA-256 analysis fingerprints and an executable identification quality gate. Refreshed the screenshot from the running V1.3 interface.
+- **V1.2:** Reconstructed and checked complete nuclide evidence before reporting; enforced Ajv 8 JSON Schemas at CLI, HTTP, and MCP boundaries; added same-snapshot reporting, host-behavior evaluation, and a three-system reference-spectrum comparison.
+- **V1.1:** Added the Skill decision workflow, deterministic tools, structured input/output contracts, and result-consistency validation.
+- **V1.0:** Released the local spectrum workbench, MCP integration, bilingual documentation, and core scientific analysis workflow.
+
+See the [V1.3](docs/SKILL_V1.3_VERIFICATION.md), [V1.2](docs/SKILL_V1.2_VERIFICATION.md), and [V1.1](docs/SKILL_V1.1_VERIFICATION.md) verification notes for scope and limitations. Analysis JSON remains at schema version `0.4`.
+
+## V1.3 Capabilities
 
 - Unified import and basic QC for CSV/TXT/DAT, ORTEC/GammaVision text SPE, and XLS/XLSX files
 - Local Poisson-significance peak detection, experimental SNIP background estimation, and adjacent-doublet Gaussian fitting
@@ -20,10 +29,15 @@ Nexus-NAA is an evidence-driven gamma-spectrum analysis agent for neutron activa
 - Version-pinned gamma-line candidates with per-line qualification and companion-peak evidence
 - Traceable HTML, JSON, and CSV output, plus restoration from workspace JSON
 - An offline rule-based assistant, optional model adapter layer, MCP interface, HTTP API, and local visual workbench
+- Ten composable deterministic tools, Ajv 8 runtime JSON Schemas, four nuclide states, and six line-observation states
+- Full-field reconstruction of nuclide evidence before reporting, covering values, explanations, provenance, limitations, calibration assessment, and retained warnings
+- Exact-snapshot reporting, a six-case host-behavior evaluator, and a three-system reference-spectrum comparison
+- Broad-tolerance candidates remain visible, while only observations inside `min(tolerance, FWHM/2 + calibration RMSE)`, inside the calibration range, and passing independence checks can support a nuclide; every exclusion reason is retained
+- Canonical JSON snapshots use SHA-256 fingerprints, and the fixed-spectrum evaluation fails automatically on non-reference `supported` results, unsupported definitive conclusions, or degraded Top-1/Top-3 reference retention
 
 ## Run Locally
 
-Requirements: Node.js 18 or later. No third-party package installation is required.
+Requirements: Node.js 18 or later and pnpm. Install the pinned Ajv dependency with `pnpm install --frozen-lockfile`.
 
 From the project directory, run:
 
@@ -42,15 +56,19 @@ node server.mjs
 
 Stop any older instance of the service to avoid loading an outdated interface.
 
-Run all syntax checks and tests without npm:
+Run all syntax checks and tests:
 
 ```bash
 node scripts/check.mjs
 ```
 
+Run the Skill contract scenarios with `node scripts/run-skill-conformance.mjs`, recheck the three supplied reference spectra with `node scripts/validate-reference-spectra.mjs`, score a host transcript with `node scripts/evaluate-host-behavior.mjs <transcript.json>`, and run the three-system comparison with `node scripts/evaluate-identification.mjs`.
+
 ## Install as an Agent Skill
 
 After cloning the repository, the entire repository can be used directly as a Skill. `SKILL.md` is the entry point; the application, MCP server, nuclear data, documentation, and tests are all included in the same directory.
+
+Use this Skill for gamma-spectrum import/QC, peak finding, user-referenced calibration, single-energy line lookup, nuclide candidate evidence, and traceable reporting. Do not use it for XRF, NMR, mass spectrometry, medical diagnosis, safety/regulatory decisions, or activity/element quantification without efficiency and experimental controls. The host model orchestrates tools and explains evidence; it must not create calibration points or rewrite scientific values. See [`references/`](references/) for the decision tree, minimum inputs, state definitions, and data policy.
 
 Install once into every supported user-level directory:
 
@@ -111,6 +129,11 @@ The HTML report contains the full spectrum, QC results, calibration, peak table,
 - [Basis for method and data improvements](docs/research-basis.md)
 - [User reference-spectrum regression results](docs/REFERENCE_VALIDATION.md)
 - [Reproducible ENSDF import pipeline](docs/ENSDF_PIPELINE.md)
+- [Skill V1.3 completeness verification](docs/SKILL_V1.3_VERIFICATION.md)
+- [Skill V1.2 historical verification](docs/SKILL_V1.2_VERIFICATION.md)
+- [Host-behavior evaluation](docs/HOST_BEHAVIOR_EVAL.md)
+- [Identification comparison](docs/IDENTIFICATION_EVALUATION.md)
+- [Pinned data and method source register](references/source-register.md)
 
 This is a simplified four-stage prototype. It does not provide general-purpose overlapping-peak deconvolution, complete uncertainty analysis, efficiency calibration, or elemental quantification, and it does not represent completion of the original large-platform concept.
 

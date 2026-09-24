@@ -176,7 +176,12 @@ export function fitLinearCalibration(points) {
   const residuals=points.map(p=>({channel:p.channel,energyKeV:p.energyKeV,predictedKeV:slope*p.channel+intercept,residualKeV:p.energyKeV-(slope*p.channel+intercept)}));
   const rmse=Math.sqrt(residuals.reduce((s,p)=>s+p.residualKeV**2,0)/n), total=points.reduce((s,p)=>s+(p.energyKeV-my)**2,0);
   const rSquared=total===0?1:1-residuals.reduce((s,p)=>s+p.residualKeV**2,0)/total;
-  return { model:"linear", slope, intercept, rmse, rSquared, points:residuals };
+  const channels=points.map(p=>p.channel),energies=points.map(p=>p.energyKeV),pointCount=points.length;
+  const validationStatus=pointCount===2?'two_point_unverified':pointCount<5?'limited_multipoint':'multipoint';
+  const warnings=[];
+  if(pointCount===2)warnings.push('两点标定只能确定线性关系，零残差是数学必然，不能独立验证准确性。');
+  else if(pointCount<5)warnings.push('参考点少于五个；必须检查残差和目标能区覆盖，不能把拟合优度当作独立准确性证明。');
+  return {model:"linear",slope,intercept,rmse,rSquared,points:residuals,pointCount,validationStatus,referenceRangeChannel:[Math.min(...channels),Math.max(...channels)],referenceRangeKeV:[Math.min(...energies),Math.max(...energies)],warnings};
 }
 
 export function applyCalibration(peaks, calibration) { return peaks.map(p => ({...p, energyKeV: calibration.slope*p.centroidChannel+calibration.intercept, fwhmKeV: Math.abs(calibration.slope)*p.fwhmChannels })); }
@@ -222,26 +227,95 @@ export function matchPeakCandidates(peaks, database, options = {}) {
   if (!Number.isFinite(toleranceKeV) || toleranceKeV <= 0 || !Number.isInteger(topN) || topN < 1) throw new SpectrumError("Top-N 必须为正整数。", "INVALID_GAMMA_QUERY");
   const measured = peaks.filter(p=>Number.isFinite(p.energyKeV));
   if (!measured.length) throw new SpectrumError("缺少能量标定，不能进行核素匹配。", "CALIBRATION_REQUIRED");
+  const calibrationRange=options.calibrationRangeKeV;
+  const calibrationRmseKeV=Number(options.calibrationRmseKeV);
+  const observability=options.observabilityByLineId||{};
+  const artifactChecks=peak=>{
+    const items=[];
+    // Candidate recall may use a broad user tolerance; artifact coincidences need a peak-width-aware window.
+    const artifactWindowKeV=Number.isFinite(peak.fwhmKeV)&&peak.fwhmKeV>0&&Number.isFinite(calibrationRmseKeV)&&calibrationRmseKeV>=0?Math.min(toleranceKeV,peak.fwhmKeV/2+calibrationRmseKeV):toleranceKeV;
+    const higher511=measured.find(p=>p.id!==peak.id&&Math.abs((p.energyKeV-511)-peak.energyKeV)<=artifactWindowKeV);
+    const higher1022=measured.find(p=>p.id!==peak.id&&Math.abs((p.energyKeV-1022)-peak.energyKeV)<=artifactWindowKeV);
+    if(higher511)items.push({type:'possible_single_escape',relatedPeakIds:[higher511.id],note:'该峰与另一观测峰相差约 511 keV；需检查单逃逸峰可能性。'});
+    if(higher1022)items.push({type:'possible_double_escape',relatedPeakIds:[higher1022.id],note:'该峰与另一观测峰相差约 1022 keV；需检查双逃逸峰可能性。'});
+    for(let i=0;i<measured.length;i++)for(let j=i+1;j<measured.length;j++){const a=measured[i],b=measured[j];if(a.id!==peak.id&&b.id!==peak.id&&Math.abs(a.energyKeV+b.energyKeV-peak.energyKeV)<=artifactWindowKeV){items.push({type:'possible_sum_peak',relatedPeakIds:[a.id,b.id],note:'该峰能量与两个观测峰能量之和接近；需检查真符合求和。'});i=measured.length;break}}
+    if(peak.overlapFit?.converged)items.push({type:'overlapped',relatedPeakIds:[],note:'该峰参与相邻双峰拟合；峰参数可能受重叠影响。'});
+    return items;
+  };
+  const calibrationUseFor=energy=>{const epsilon=1e-9*Math.max(1,Math.abs(calibrationRange?.[0]??0),Math.abs(calibrationRange?.[1]??0));return calibrationRange?(energy>=calibrationRange[0]-epsilon&&energy<=calibrationRange[1]+epsilon?'within_reference_range':'extrapolated'):'not_assessable'};
+  const assessSupport=(peak,line)=>{
+    const supportWindowKeV=Number.isFinite(peak.fwhmKeV)&&peak.fwhmKeV>0&&Number.isFinite(calibrationRmseKeV)&&calibrationRmseKeV>=0?Math.min(toleranceKeV,peak.fwhmKeV/2+calibrationRmseKeV):null;
+    const reasons=[],calibrationUse=calibrationUseFor(peak.energyKeV),artifacts=artifactChecks(peak);
+    if(calibrationUse!=='within_reference_range')reasons.push(calibrationUse==='extrapolated'?'CALIBRATION_OUTSIDE_REFERENCE_RANGE':'CALIBRATION_RANGE_UNAVAILABLE');
+    if(supportWindowKeV===null)reasons.push(!Number.isFinite(peak.fwhmKeV)||peak.fwhmKeV<=0?'PEAK_WIDTH_UNAVAILABLE':'CALIBRATION_RMSE_UNAVAILABLE');
+    else if(Math.abs(peak.energyKeV-line.energyKeV)>supportWindowKeV)reasons.push('OUTSIDE_SUPPORT_WINDOW');
+    if(line.mode==='annihilation')reasons.push('NON_UNIQUE_511_KEV');
+    if(artifacts.length)reasons.push('UNRESOLVED_PEAK_ARTIFACT');
+    const closer=database.lines.filter(other=>other.nuclide!==line.nuclide&&Math.abs(peak.energyKeV-other.energyKeV)<=toleranceKeV&&Math.abs(peak.energyKeV-other.energyKeV)+1e-9<Math.abs(peak.energyKeV-line.energyKeV)).sort((a,b)=>Math.abs(peak.energyKeV-a.energyKeV)-Math.abs(peak.energyKeV-b.energyKeV))[0];
+    if(closer)reasons.push('CLOSER_COMPETING_LINE');
+    const independenceStatus=artifacts.length?'unresolved_artifact':closer?'closer_competing_line':supportWindowKeV===null||calibrationUse!=='within_reference_range'?'not_assessable':'independent';
+    return {supportEligible:reasons.length===0,supportWindowKeV,independenceStatus,supportExclusionReasons:reasons,calibrationUse,artifacts,closer};
+  };
   return measured.map(peak => {
+    const calibrationUse=calibrationUseFor(peak.energyKeV);
+    const peakArtifacts=artifactChecks(peak);
     const candidates=queryGammaLines(database,peak.energyKeV,toleranceKeV,Math.max(topN*3,topN)).map(line=>{
+      const support=assessSupport(peak,line);
       const companionLines=database.lines.filter(x=>x.nuclide===line.nuclide&&x.energyKeV!==line.energyKeV&&x.intensityPercent>=5);
       const used=new Set([peak.id]);
-      const companions=companionLines.map(expected=>{const inRange=!options.energyRange || (expected.energyKeV>=options.energyRange[0]&&expected.energyKeV<=options.energyRange[1]); const found=inRange?measured.find(p=>!used.has(p.id)&&Math.abs(p.energyKeV-expected.energyKeV)<=toleranceKeV):null;if(found)used.add(found.id);return {energyKeV:expected.energyKeV,intensityPercent:expected.intensityPercent,foundPeakId:found?.id??null,status:found?'found':inRange?'not_observed_not_excluded':'outside_range'}});
-      const foundCount=companions.filter(c=>c.foundPeakId).length, energyScore=Math.max(0,1-line.absDeltaKeV/toleranceKeV), companionScore=companions.length?foundCount/companions.length:0;
+      const companions=companionLines.map(expected=>{const inRange=!options.energyRange || (expected.energyKeV>=options.energyRange[0]&&expected.energyKeV<=options.energyRange[1]); const found=inRange?measured.filter(p=>!used.has(p.id)&&Math.abs(p.energyKeV-expected.energyKeV)<=toleranceKeV).sort((a,b)=>Math.abs(a.energyKeV-expected.energyKeV)-Math.abs(b.energyKeV-expected.energyKeV))[0]:null;if(found)used.add(found.id);const assessed=observability[expected.id],qualification=found?assessSupport(found,expected):null;let status;if(found)status='observed';else if(!inRange)status='outside_range';else if(assessed?.detectable===false)status='below_observability';else if(assessed?.detectable===true)status='expected_but_not_observed';else status='not_assessable';return {lineId:expected.id,energyKeV:expected.energyKeV,intensityPercent:expected.intensityPercent,foundPeakId:found?.id??null,status,sourceId:expected.sourceId,sourceUrl:expected.sourceUrl,supportEligible:qualification?.supportEligible??false,supportWindowKeV:qualification?.supportWindowKeV??null,independenceStatus:qualification?.independenceStatus??'not_assessable',supportExclusionReasons:qualification?.supportExclusionReasons??(found?[]:['NOT_OBSERVED'])}});
+      const eligibleCompanionCount=companions.filter(c=>c.supportEligible).length, energyScore=Math.max(0,1-line.absDeltaKeV/toleranceKeV), companionScore=companions.length?eligibleCompanionCount/companions.length:0;
       const score=Math.round(100*(0.75*energyScore+0.25*companionScore));
-      let status="insufficient_evidence"; if(foundCount>0&&energyScore>=0.75)status="supported";else if(energyScore>=0.75&&companions.length===0)status="tentative";else if(foundCount>0)status="tentative";else if(energyScore<0.35)status="conflicting";
+      let status="insufficient_evidence"; if(support.supportEligible&&eligibleCompanionCount>0)status="supported";else if(support.supportEligible||eligibleCompanionCount>0)status="tentative";else if(energyScore<0.35)status="conflicting";
       if(line.mode==='annihilation')status='insufficient_evidence';
-      return {...line,score,status,companions};
+      if(calibrationUse==='extrapolated')status='insufficient_evidence';
+      const crowded=queryGammaLines(database,peak.energyKeV,toleranceKeV,50).filter(x=>x.id!==line.id).map(x=>({type:'line_crowding',nuclide:x.nuclide,lineId:x.id,energyKeV:x.energyKeV,sourceId:x.sourceId}));
+      const contradictions=[];
+      if(calibrationUse==='extrapolated')contradictions.push({code:'CALIBRATION_EXTRAPOLATION',message:'峰能量位于参考标定能区之外。'});
+      if(line.mode==='annihilation')contradictions.push({code:'NON_UNIQUE_511_KEV',message:'511 keV 湮没峰不能唯一识别核素。'});
+      if(companions.some(x=>x.status==='expected_but_not_observed'))contradictions.push({code:'EXPECTED_LINE_MISSING',message:'至少一条经明确可观测性评估应出现的伴随线未观察到。'});
+      return {...line,score,status,companions,evidenceId:`peak-${peak.id}-line-${line.id}`,calibrationUse,supportEligible:support.supportEligible,supportWindowKeV:support.supportWindowKeV,independenceStatus:support.independenceStatus,supportExclusionReasons:support.supportExclusionReasons,contradictions,interferences:[...peakArtifacts,...crowded],missingInformation:[...(companions.some(x=>x.status==='not_assessable')?['缺少效率、几何或探测限信息，无法判断未观察到的伴随线是否可见。']:[]),'缺少能量相关效率、几何、自吸收与统计不确定度，未执行相对强度一致性检验。']};
     }).sort((a,b)=>b.score-a.score||a.absDeltaKeV-b.absDeltaKeV).slice(0,topN);
-    return {peakId:peak.id,measuredEnergyKeV:peak.energyKeV,toleranceKeV,candidates,conclusion:candidates.length?"candidate_only":"insufficient_evidence"};
+    return {peakId:peak.id,measuredEnergyKeV:peak.energyKeV,toleranceKeV,calibrationUse,candidates,conclusion:candidates.length?"candidate_only":"insufficient_evidence"};
   });
 }
 
+export function rankNuclideCandidates(matches,database,calibration=null){
+  if(!Array.isArray(matches))throw new SpectrumError('核素候选输入必须是匹配结果数组。','INVALID_CANDIDATE_INPUT');
+  const groups=new Map();
+  for(const match of matches)for(const candidate of match.candidates||[]){let group=groups.get(candidate.nuclide);if(!group){group={nuclide:candidate.nuclide,status:'insufficient_evidence',score:0,matched_lines:[],companion_lines:[],contradictions:[],interferences:[],missing_information:[],data_sources:[],limitations:['数据库候选不是确认检出；结论仅适用于当前固定数据快照和分析参数。']};groups.set(candidate.nuclide,group)}
+    group.matched_lines.push({evidence_id:candidate.evidenceId,peak_id:match.peakId,observed_energy_keV:match.measuredEnergyKeV,reference_line_id:candidate.id,reference_energy_keV:candidate.energyKeV,residual_keV:candidate.deltaKeV,tolerance_keV:match.toleranceKeV,calibration_use:candidate.calibrationUse,line_candidate_status:candidate.status,status:'observed',support_eligible:candidate.supportEligible===true,support_window_keV:candidate.supportWindowKeV??null,independence_status:candidate.independenceStatus??'not_assessable',support_exclusion_reasons:candidate.supportExclusionReasons??[]});
+    group.companion_lines.push(...(candidate.companions||[]).map(x=>({...x,evidence_id:`${candidate.evidenceId}-companion-${x.lineId}`})));
+    group.contradictions.push(...(candidate.contradictions||[]));group.interferences.push(...(candidate.interferences||[]));group.missing_information.push(...(candidate.missingInformation||[]));
+    const source=database?.sources?.[candidate.sourceId];if(source)group.data_sources.push({source_id:candidate.sourceId,record_id:candidate.id,url:candidate.sourceUrl,name:source.name,version:source.version});
+    group.score=Math.max(group.score,candidate.score||0);
+  }
+  for(const group of groups.values()){
+    const eligibleObservations=new Map();for(const line of group.matched_lines)if(line.support_eligible&&!eligibleObservations.has(line.peak_id))eligibleObservations.set(line.peak_id,line.reference_line_id);for(const line of group.companion_lines)if(line.supportEligible&&line.foundPeakId!==null&&!eligibleObservations.has(line.foundPeakId))eligibleObservations.set(line.foundPeakId,line.lineId);
+    const eligibleDirectCount=group.matched_lines.filter(x=>x.support_eligible).length,distinctLines=new Set(eligibleObservations.values()).size,blocking=group.contradictions.some(x=>['CALIBRATION_EXTRAPOLATION','NON_UNIQUE_511_KEV','EXPECTED_LINE_MISSING'].includes(x.code));
+    if(blocking)group.status=group.contradictions.some(x=>x.code==='EXPECTED_LINE_MISSING')?'conflicting':'insufficient_evidence';
+    else if(eligibleDirectCount>=1&&distinctLines>=2)group.status='supported';else if(distinctLines>=1)group.status='tentative';else if(group.matched_lines.some(x=>x.line_candidate_status==='conflicting'))group.status='conflicting';
+    group.calibration_assessment={status:calibration?.validationStatus??'not_assessable',point_count:calibration?.pointCount??null,reference_range_keV:calibration?.referenceRangeKeV??null,uses_extrapolation:group.matched_lines.some(x=>x.calibration_use==='extrapolated'),interpretation:calibration?.validationStatus==='two_point_unverified'?'谱线一致性支持与标定可信状态必须分开解释；两点标定尚未独立验证。':'核素状态只表示谱线证据等级，不等同于确认检出。'};
+    group.limitations.push('支持窗采用 min(用户候选容差, FWHM/2 + 标定 RMSE) 的保守工程规则，尚需在更大独立验证集上确认。');
+    group.contradictions=uniqueObjects(group.contradictions);group.interferences=uniqueObjects(group.interferences);group.missing_information=[...new Set(group.missing_information)];group.data_sources=uniqueObjects(group.data_sources);
+  }
+  return [...groups.values()].sort((a,b)=>statusRank(b.status)-statusRank(a.status)||b.score-a.score||a.nuclide.localeCompare(b.nuclide));
+}
+
+function statusRank(status){return {supported:4,tentative:3,conflicting:2,insufficient_evidence:1}[status]||0}
+function uniqueObjects(items){const seen=new Set();return items.filter(x=>{const key=JSON.stringify(x);if(seen.has(key))return false;seen.add(key);return true})}
+
 export function buildEvidence(spectrum, calibration, matches, database) {
   let id=0;const evidence=[];const next=()=>`EV-${String(++id).padStart(4,"0")}`;
-  const sourceId=next();evidence.push({id:sourceId,type:"measured_spectrum",filename:spectrum.filename,sha256:spectrum.sha256??null,channelCount:spectrum.channels.length});
-  const calId=next();evidence.push({id:calId,type:"calibration",model:calibration.model,slope:calibration.slope,intercept:calibration.intercept,rmseKeV:calibration.rmse,dependsOn:[sourceId]});
+  const sourceId=next();evidence.push({id:sourceId,evidence_id:sourceId,type:"measured_spectrum",filename:spectrum.filename,sha256:spectrum.sha256??null,channelCount:spectrum.channels.length});
+  const calId=next();evidence.push({id:calId,evidence_id:calId,type:"calibration",model:calibration.model,slope:calibration.slope,intercept:calibration.intercept,rmseKeV:calibration.rmse,referenceRangeKeV:calibration.referenceRangeKeV,dependsOn:[sourceId]});
   const claims=[];
-  for(const match of matches)for(const candidate of match.candidates){const dataId=next(),fitId=next();evidence.push({id:dataId,type:"nuclear_data",nuclide:candidate.nuclide,referenceEnergyKeV:candidate.energyKeV,sourceId:candidate.sourceId,recordId:candidate.id,sourcePage:candidate.sourcePage,sourceUrl:candidate.sourceUrl,datasetId:database.datasetId});evidence.push({id:fitId,type:"energy_match",peakId:match.peakId,measuredEnergyKeV:match.measuredEnergyKeV,referenceEnergyKeV:candidate.energyKeV,deltaKeV:candidate.deltaKeV,toleranceKeV:match.toleranceKeV,companionChecks:candidate.companions,dependsOn:[sourceId,calId,dataId]});claims.push({id:`CL-${String(claims.length+1).padStart(4,"0")}`,statement:`峰 ${match.peakId} 与 ${candidate.nuclide} 的 ${candidate.energyKeV} keV 线相容`,level:candidate.status,score:candidate.score,evidenceIds:[fitId,dataId],disclaimer:"候选关联，不代表确定检出"})}
+  const addNuclearData=line=>{const dataId=`data-${line.id}`;if(!evidence.some(x=>x.id===dataId))evidence.push({id:dataId,evidence_id:dataId,type:'nuclear_data',nuclide:line.nuclide,referenceEnergyKeV:line.energyKeV,sourceId:line.sourceId,recordId:line.id,sourcePage:line.sourcePage,sourceUrl:line.sourceUrl,datasetId:database.datasetId});return dataId};
+  for(const match of matches)for(const candidate of match.candidates){
+    const dataId=addNuclearData(candidate),fitId=candidate.evidenceId;
+    evidence.push({id:fitId,evidence_id:fitId,type:'energy_match',peakId:match.peakId,nuclide:candidate.nuclide,recordId:candidate.id,measuredEnergyKeV:match.measuredEnergyKeV,referenceEnergyKeV:candidate.energyKeV,deltaKeV:candidate.deltaKeV,toleranceKeV:match.toleranceKeV,calibrationUse:candidate.calibrationUse,supportEligible:candidate.supportEligible,supportWindowKeV:candidate.supportWindowKeV,independenceStatus:candidate.independenceStatus,supportExclusionReasons:candidate.supportExclusionReasons,companionChecks:candidate.companions,contradictions:candidate.contradictions,interferences:candidate.interferences,dependsOn:[sourceId,calId,dataId]});
+    for(const companion of candidate.companions||[]){const line=database.lines.find(x=>x.id===companion.lineId),companionDataId=line?addNuclearData(line):null,companionId=`${fitId}-companion-${companion.lineId}`;evidence.push({id:companionId,evidence_id:companionId,type:'companion_check',nuclide:candidate.nuclide,parentEvidenceId:fitId,recordId:companion.lineId,referenceEnergyKeV:companion.energyKeV,status:companion.status,foundPeakId:companion.foundPeakId,sourceId:companion.sourceId,sourceUrl:companion.sourceUrl,supportEligible:companion.supportEligible,supportWindowKeV:companion.supportWindowKeV,independenceStatus:companion.independenceStatus,supportExclusionReasons:companion.supportExclusionReasons,dependsOn:[fitId,...(companionDataId?[companionDataId]:[])]})}
+    claims.push({id:`CL-${String(claims.length+1).padStart(4,"0")}`,statement:`峰 ${match.peakId} 与 ${candidate.nuclide} 的 ${candidate.energyKeV} keV 线相容`,level:candidate.status,score:candidate.score,evidenceIds:[fitId,dataId],disclaimer:'候选关联，不代表确定检出'});
+  }
   return {dataset:{id:database.datasetId,retrievedAt:database.retrievedAt,sources:database.sources},evidence,claims};
 }

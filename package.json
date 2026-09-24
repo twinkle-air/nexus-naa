@@ -1,6 +1,6 @@
 {
   "name": "nexus-naa",
-  "version": "1.0.0",
+  "version": "1.3.0",
   "private": false,
   "license": "MIT",
   "type": "module",
@@ -9,6 +9,12 @@
     "check": "node --check src/core.js && node --check src/app.js && node --check src/workflow.js && node --check src/assistant.js && node --check src/demo.js && node --check src/report.js && node --check model.mjs && node --check server.mjs && node --test",
     "start": "node server.mjs",
     "mcp": "node mcp-server.mjs",
-    "validate:references": "node scripts/validate-reference-spectra.mjs"
+    "test:skill": "node scripts/run-skill-conformance.mjs",
+    "validate:references": "node scripts/validate-reference-spectra.mjs",
+    "eval:host": "node scripts/evaluate-host-behavior.mjs",
+    "eval:identification": "node scripts/evaluate-identification.mjs"
+  },
+  "dependencies": {
+    "ajv": "8.17.1"
   }
 }

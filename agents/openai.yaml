@@ -1,7 +1,7 @@
 interface:
   display_name: "Nexus-NAA"
   short_description: "γ 能谱证据分析 / Evidence-driven gamma-spectrum analysis"
-  default_prompt: "Use $nexus-naa to analyze this gamma spectrum. Report QC, calibration evidence, peak candidates, provenance, and limitations; do not claim confirmed identification or quantitative results without validation."
+  default_prompt: "Use $nexus-naa to analyze this gamma spectrum. Follow its minimum-input and stop rules, distinguish broad candidate retrieval from support-eligible independent evidence, run deterministic validation before reporting the exact validated snapshot, and present QC, calibration assessment, spectral-line consistency evidence, provenance, missing information, and limitations as separate dimensions. Never claim confirmed identification or unsupported quantitative results."
 
 policy:
   allow_implicit_invocation: true

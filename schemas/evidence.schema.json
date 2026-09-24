@@ -1,0 +1,44 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/twinkle-air/nexus-naa/schemas/evidence.schema.json",
+  "title": "Nexus-NAA nuclide evidence V1.3",
+  "type": "object",
+  "required": ["nuclide", "status", "score", "matched_lines", "companion_lines", "contradictions", "interferences", "missing_information", "data_sources", "limitations", "calibration_assessment"],
+  "properties": {
+    "nuclide": { "type": "string", "minLength": 1 },
+    "status": { "$ref": "#/$defs/candidateStatus" },
+    "score": { "type": "number", "minimum": 0, "maximum": 100 },
+    "matched_lines": { "type": "array", "items": { "$ref": "#/$defs/matchedLine" } },
+    "companion_lines": { "type": "array", "items": { "$ref": "#/$defs/companionLine" } },
+    "contradictions": { "type": "array", "items": { "$ref": "#/$defs/contradiction" } },
+    "interferences": { "type": "array", "items": { "$ref": "#/$defs/interference" } },
+    "missing_information": { "type": "array", "items": { "type": "string" } },
+    "data_sources": { "type": "array", "items": { "$ref": "#/$defs/dataSource" } },
+    "limitations": { "type": "array", "items": { "type": "string" } },
+    "calibration_assessment": { "$ref": "#/$defs/calibrationAssessment" }
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "candidateStatus": { "enum": ["supported", "tentative", "conflicting", "insufficient_evidence"] },
+    "lineStatus": { "enum": ["observed", "expected_but_not_observed", "below_observability", "outside_range", "overlapped", "not_assessable"] },
+    "matchedLine": {
+      "type": "object",
+      "required": ["evidence_id", "peak_id", "observed_energy_keV", "reference_line_id", "reference_energy_keV", "residual_keV", "tolerance_keV", "calibration_use", "line_candidate_status", "status", "support_eligible", "support_window_keV", "independence_status", "support_exclusion_reasons"],
+      "properties": {
+        "evidence_id": { "type": "string" }, "peak_id": { "type": "integer", "minimum": 1 }, "observed_energy_keV": { "type": "number" }, "reference_line_id": { "type": "string" }, "reference_energy_keV": { "type": "number" }, "residual_keV": { "type": "number" }, "tolerance_keV": { "type": "number", "exclusiveMinimum": 0 }, "calibration_use": { "enum": ["within_reference_range", "extrapolated", "not_assessable"] }, "line_candidate_status": { "$ref": "#/$defs/candidateStatus" }, "status": { "const": "observed" }, "support_eligible": { "type": "boolean" }, "support_window_keV": { "type": ["number", "null"], "exclusiveMinimum": 0 }, "independence_status": { "$ref": "#/$defs/independenceStatus" }, "support_exclusion_reasons": { "type": "array", "items": { "type": "string" } }
+      },
+      "additionalProperties": false
+    },
+    "companionLine": {
+      "type": "object",
+      "required": ["evidence_id", "lineId", "energyKeV", "intensityPercent", "foundPeakId", "status", "sourceId", "sourceUrl", "supportEligible", "supportWindowKeV", "independenceStatus", "supportExclusionReasons"],
+      "properties": { "evidence_id": { "type": "string" }, "lineId": { "type": "string" }, "energyKeV": { "type": "number" }, "intensityPercent": { "type": "number" }, "foundPeakId": { "type": ["integer", "null"] }, "status": { "$ref": "#/$defs/lineStatus" }, "sourceId": { "type": "string" }, "sourceUrl": { "type": "string" }, "supportEligible": { "type": "boolean" }, "supportWindowKeV": { "type": ["number", "null"], "exclusiveMinimum": 0 }, "independenceStatus": { "$ref": "#/$defs/independenceStatus" }, "supportExclusionReasons": { "type": "array", "items": { "type": "string" } } },
+      "additionalProperties": false
+    },
+    "independenceStatus": { "enum": ["independent", "closer_competing_line", "unresolved_artifact", "not_assessable"] },
+    "contradiction": { "type": "object", "required": ["code", "message"], "properties": { "code": { "type": "string" }, "message": { "type": "string" } }, "additionalProperties": false },
+    "interference": { "type": "object", "required": ["type"], "properties": { "type": { "type": "string" }, "relatedPeakIds": { "type": "array", "items": { "type": "integer" } }, "note": { "type": "string" }, "nuclide": { "type": "string" }, "lineId": { "type": "string" }, "energyKeV": { "type": "number" }, "sourceId": { "type": "string" } }, "additionalProperties": false },
+    "dataSource": { "type": "object", "required": ["source_id", "record_id", "url", "name", "version"], "properties": { "source_id": { "type": "string" }, "record_id": { "type": "string" }, "url": { "type": "string" }, "name": { "type": "string" }, "version": { "type": "string" } }, "additionalProperties": false },
+    "calibrationAssessment": { "type": "object", "required": ["status", "point_count", "reference_range_keV", "uses_extrapolation", "interpretation"], "properties": { "status": { "enum": ["two_point_unverified", "limited_multipoint", "multipoint", "not_assessable"] }, "point_count": { "type": ["integer", "null"] }, "reference_range_keV": { "type": ["array", "null"], "items": { "type": "number" }, "minItems": 2, "maxItems": 2 }, "uses_extrapolation": { "type": "boolean" }, "interpretation": { "type": "string" } }, "additionalProperties": false }
+  }
+}

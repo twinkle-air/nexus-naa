@@ -1,4 +1,4 @@
-# Nexus-NAA · V1.0
+# Nexus-NAA · V1.3
 
 [English](README_EN.md)
 
@@ -8,13 +8,22 @@
 
 Nexus-NAA is an evidence-driven gamma-spectrum analysis agent for neutron activation analysis (NAA). It supports spectrum import and QC, peak finding, user-referenced energy calibration, nuclide candidate evidence, and traceable reports through a local workbench, MCP tools, and an HTTP API. Matches are candidates, not confirmed identifications; quantitative analysis requires further experimental calibration and uncertainty controls.
 
-> 本项目用于研究、教学和方法验证，不是经认证的实验室测量系统。数据库命中只构成候选证据；当前版本不包含效率刻度、照射/衰变修正、完整不确定度或经验证的元素定量，不能独立用于安全、监管或商业检测结论。V1.0 是软件发布与登记版本号，沿用此前 v0.4 的科学功能范围；分析 JSON 的格式版本 0.4 保持不变，以兼容已保存文件。
+> 本项目用于研究、教学和方法验证，不是经认证的实验室测量系统。数据库命中只构成候选证据；当前版本不包含效率刻度、照射/衰变修正、完整不确定度或经验证的元素定量，不能独立用于安全、监管或商业检测结论。V1.3 将宽容差候选召回与窄支持窗分离，增加谱线独立性审查、SHA-256 分析指纹和可执行识别质量门槛；分析 JSON 的格式版本 0.4 保持不变。
 
 ## 智能体页面
 
-![Nexus-NAA V1.0 智能体工作台：右侧固定共享数据流、语言与使用指南入口](assets/nexus-naa-workbench.png)
+![Nexus-NAA V1.3 实际页面：分析助手、共享数据流和能谱导入区](assets/nexus-naa-workbench-v1.3.png)
 
-## V1.0 能力
+## 更新日志
+
+- **V1.3（2026-09-24）**：宽容差用于保留候选，窄支持窗与谱线独立性审查决定能否标为 `supported`；新增规范化 JSON 的 SHA-256 分析指纹和识别质量失败门槛。页面截图已更新为 V1.3 实际运行界面。
+- **V1.2**：报告前重建并核对完整核素证据；用 Ajv 8 在 CLI、HTTP、MCP 入口执行 JSON Schema；增加同一快照报告、宿主行为评测与三系统参考谱对照。
+- **V1.1**：建立 Skill 决策流程、确定性工具、结构化输入输出和结果一致性验证。
+- **V1.0**：发布本地能谱工作台、MCP 接入、双语文档和基础科学分析流程。
+
+各版本的验证范围见 [V1.3 核对](docs/SKILL_V1.3_VERIFICATION.md)、[V1.2 核对](docs/SKILL_V1.2_VERIFICATION.md)和 [V1.1 核对](docs/SKILL_V1.1_VERIFICATION.md)。分析 JSON 格式版本仍为 `0.4`。
+
+## V1.3 能力
 
 - CSV/TXT/DAT、ORTEC/GammaVision 文本 SPE、XLS/XLSX 统一导入与基础 QC；
 - 局部泊松显著性寻峰、实验性 SNIP 本底和相邻双峰 Gaussian 拟合；
@@ -22,14 +31,21 @@ Nexus-NAA is an evidence-driven gamma-spectrum analysis agent for neutron activa
 - 版本固定、逐条标注资格的 γ 谱线候选与伴随峰证据；
 - HTML、JSON、CSV 可追溯输出，以及工作区 JSON 恢复；
 - 离线规则助手、可选模型适配层、MCP、HTTP API 和本地可视化工作台。
+- 十个可组合的确定性工具、Ajv 8 运行时 JSON Schema、四级核素状态与六种谱线状态；
+- 报告前从谱线结果重建整个核素证据对象，逐字段检查输入哈希、数值、说明、来源、标定评估和警告；
+- 首选对同一份已验证快照生成报告，并提供六场景宿主行为评测器与三系统参考谱对照。
+- 候选可在用户容差内完整保留，但只有位于 `min(容差, FWHM/2 + 标定 RMSE)` 支持窗、标定参考能区内且通过独立性检查的观测才可贡献 `supported`；失败原因逐条保留。
+- 分析快照使用规范化 JSON 的 SHA-256 指纹；固定参考谱评测对非标签 `supported`、无依据确定结论及 Top-1/Top-3 保留设置自动失败门槛。
 
 ## 运行
-要求 Node.js 18+，无第三方包依赖。在项目目录运行 `node server.mjs`，浏览器打开 http://127.0.0.1:4173 。停止用 Ctrl+C。端口占用时可在 PowerShell 先执行 `$env:PORT='4185'`，再启动并打开对应端口。关闭旧版本服务以免看到旧页面。
-完整语法检查与测试：`node scripts/check.mjs`（无需 npm）。
+要求 Node.js 18+ 和 pnpm；先执行 `pnpm install --frozen-lockfile` 安装锁定的 Ajv 8，再运行 `node server.mjs`，浏览器打开 http://127.0.0.1:4173 。停止用 Ctrl+C。端口占用时可在 PowerShell 先执行 `$env:PORT='4185'`，再启动并打开对应端口。关闭旧版本服务以免看到旧页面。
+完整语法检查与测试：`node scripts/check.mjs`。仅运行 Skill 契约场景：`node scripts/run-skill-conformance.mjs`；复核三份标准谱：`node scripts/validate-reference-spectra.mjs`；宿主行为评分：`node scripts/evaluate-host-behavior.mjs <transcript.json>`；三系统识别对照：`node scripts/evaluate-identification.mjs`。
 
 ## 安装为 Agent Skill
 
 克隆仓库后，可直接把整个仓库作为 Skill 使用；`SKILL.md` 是入口，应用、MCP 服务、核数据、文档和测试都包含在同一目录中。
+
+Skill 适合 γ 能谱导入/QC、寻峰、用户参考点标定、单能量谱线查询、核素候选证据和可追溯报告；不适合 XRF、NMR、质谱、医学诊断、安全/监管判定，或缺少效率与实验控制时的活度和元素定量。模型只负责编排工具和解释证据，不得生成标定点或改写数值。完整决策树、输入要求、状态定义和数据政策见 [`references/`](references/)。
 
 一次安装到所有支持的用户级目录：
 
@@ -76,6 +92,7 @@ HTML 包含完整谱、QC、标定、峰表、候选理由、来源、证据链�
 [智能体、MCP 与 HTTP API 接入](docs/AGENT_INTEGRATION.md)
 [方法与数据改进依据](docs/research-basis.md)
 [用户标准谱回归结果](docs/REFERENCE_VALIDATION.md) · [ENSDF可复现导入流程](docs/ENSDF_PIPELINE.md)
+[Skill V1.3 完整性核对](docs/SKILL_V1.3_VERIFICATION.md) · [V1.2 历史核对](docs/SKILL_V1.2_VERIFICATION.md) · [宿主行为评测](docs/HOST_BEHAVIOR_EVAL.md) · [识别对照](docs/IDENTIFICATION_EVALUATION.md) · [固定数据与方法来源登记](references/source-register.md)
 这是简化四阶段原型；可选的相邻双峰局部拟合仍属实验功能，不含完整不确定度评定、效率刻度及元素定量，不代表原始大型平台方案全部完成。
 
 ## 开源与数据说明
