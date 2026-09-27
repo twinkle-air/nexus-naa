@@ -78,6 +78,8 @@ python scripts/install.py --tool all --scope user
 
 You may replace `all` with `codex`, `claude`, `workbuddy`, `codebuddy`, `qoder`, `zcode`, or `deepseek-harness`.
 
+According to a teammate's report, the Skill has been installed and used successfully in Claude Code and Qoder. This is real-world feedback from two hosts, not a controlled cross-model behavior evaluation.
+
 Example of a project-level installation:
 
 ```bash
@@ -100,7 +102,7 @@ The default peak detector uses local Poisson significance so that a very intense
 
 Energy calibration supports manual entry and an **assist with known standard source** option. After the user selects a standard nuclide known to be present in the experiment, the program detects peaks in the current spectrum and proposes channel-to-reference-energy pairs. It fills the fields but never applies the calibration automatically. Two peaks in an unknown spectrum cannot uniquely determine both the nuclide identity and a linear calibration, and a two-point fit with zero RMSE is not an accuracy validation.
 
-The active nuclear dataset contains 29 actual emitting nuclides and 81 gamma lines. Of these, 58 lines come from a fixed IAEA 2008 report and were checked page by page; 23 come from a user competition dataset and were independently reviewed against IAEA, LNHB/DDEP, and NNDC material. The 63.29 and 92.38 keV lines originally labeled U-238 are assigned to their actual emitter, Th-234. They may indicate U-238 only indirectly when equilibrium is justified. The included dataset is not presented as a complete or continuously updated nuclear database.
+The active nuclear dataset contains 29 actual emitting nuclides and 81 gamma lines. Of these, 58 lines come from a fixed IAEA 2008 report and were checked page by page; 23 come from user-provided data and were independently reviewed against IAEA, LNHB/DDEP, and NNDC material. The 63.29 and 92.38 keV lines originally labeled U-238 are assigned to their actual emitter, Th-234. They may indicate U-238 only indirectly when equilibrium is justified. The included dataset is not presented as a complete or continuously updated nuclear database.
 
 ## Assistant and Model Integration
 
