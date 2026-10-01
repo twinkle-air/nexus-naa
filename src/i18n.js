@@ -1,4 +1,6 @@
 const translations = new Map(Object.entries({
+  '从原始谱线到可复核结果':'From raw spectra to reviewable results',
+  '质量检查、寻峰、标定与候选证据，保留每一步分析记录。':'Quality checks, peak search, calibration and candidate evidence, with every analysis step retained.',
   '质检':'QC','OpenAI 兼容 API':'OpenAI-compatible API',
   '文件可读取':'Readable file','计数有效':'Valid counts','全部为有限非负数':'All counts are finite and non-negative','通道唯一且递增':'Unique, increasing channels','数据提示':'Data warnings',
   '已载入确定性合成验证谱，参考标定来自生成公式 E=C。输入“分析这张谱”验证完整流程。':'Loaded the deterministic synthetic spectrum with reference calibration E=C. Enter “Analyze this spectrum” to test the workflow.',
