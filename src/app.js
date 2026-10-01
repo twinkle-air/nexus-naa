@@ -10,6 +10,53 @@ const $ = id => document.getElementById(id);
 let loadRevision=0;
 let manualPreparedFor='';
 let displayedGroups=null;
+let taskMode='analyze';
+const taskHints={
+  analyze:'完整分析：导入、质量检查、寻峰、标定、核素候选与报告。',
+  peaks:'仅寻峰：导入、质量检查、能谱浏览与峰结果；不需要能量标定。',
+  reliability:'可靠性复核：查看当前标定、峰结果与候选证据。需要修改参数时切回完整分析。',
+  report:'报告预览：查看当前谱与分析结果并下载报告。需要修改参数时切回完整分析。',
+  query:'核数据查询：按核素或能量浏览参考数据，无需导入能谱。',
+  match:'核素匹配：复核标定与峰列表后匹配候选。'
+};
+const peakModeHelp={
+  adaptive:'局部显著性模式：以局部本底评估峰突出度，使用 σ 阈值筛查弱峰。',
+  snip:'SNIP 模式：先估计连续本底，再以 σ 阈值筛查峰；请比较窗口和阈值的敏感性。',
+  global:'全谱比例模式：按全谱最大计数的一定比例筛选峰突出度。'
+};
+function updatePeakModeUI(){
+  const mode=$('detectionMode').value;
+  document.body.dataset.peakMode=mode;
+  document.querySelectorAll('[data-peak-modes]').forEach(node=>{
+    const visible=node.dataset.peakModes.split(' ').includes(mode);
+    node.classList.toggle('hidden',!visible);
+    node.querySelectorAll('input').forEach(input=>input.disabled=!visible);
+  });
+  $('peakModeHelp').textContent=peakModeHelp[mode];
+  $('promValue').textContent=`${$('prominence').value}%`;
+}
+function updateTaskUI(){
+  document.body.dataset.taskMode=taskMode;
+  document.querySelectorAll('[data-task-visible]').forEach(node=>node.classList.toggle('hidden',!node.dataset.taskVisible.split(' ').includes(taskMode)));
+  document.querySelectorAll('[data-command]').forEach(button=>button.setAttribute('aria-pressed',String(offlinePlan(button.dataset.command).action===taskMode)));
+  $('quickQuery').setAttribute('aria-pressed',String(taskMode==='query'));
+  $('taskHint').textContent=taskHints[taskMode];
+  $('queryWorkspace').classList.toggle('hidden',taskMode!=='query');
+  $('phase').classList.toggle('hidden',taskMode==='query');
+  $('workspace').classList.toggle('hidden',!spectrum||taskMode==='query');
+  $('empty').classList.toggle('hidden',Boolean(spectrum)||taskMode==='query');
+  $('sharedFlow').classList.toggle('hidden',taskMode==='query');
+  $('flowToggle').classList.toggle('hidden',taskMode==='query');
+  for(const id of ['flowCalibration','flowCandidates']){
+    $(id).classList.toggle('hidden',taskMode==='peaks');
+    $(id).previousElementSibling.classList.toggle('hidden',taskMode==='peaks');
+  }
+  const visibleCards=[...document.querySelectorAll('.analysis-grid > article')].filter(node=>!node.classList.contains('hidden'));
+  document.querySelector('.analysis-grid').classList.toggle('single-panel',visibleCards.length===1);
+  $('report').classList.toggle('hidden',taskMode==='peaks'||taskMode==='query');
+  $('report').disabled=!spectrum;
+}
+function selectTask(action){if(!(action in taskHints))return;taskMode=action;updateTaskUI();updateFlow();if(spectrum&&taskMode!=='query')draw();}
 const flowMedia=window.matchMedia('(max-width: 1199px)');
 let flowOpen=false;
 function syncFlowPresentation(){const compact=flowMedia.matches,panel=$('sharedFlow');if(!compact)flowOpen=false;panel.classList.toggle('open',compact&&flowOpen);panel.inert=compact&&!flowOpen;panel.setAttribute('aria-hidden',String(compact&&!flowOpen));$('flowToggle').setAttribute('aria-expanded',String(compact&&flowOpen));}
@@ -29,10 +76,10 @@ async function loadText(text, name, bytes=null) {
   try {const hash=await sha256(bytes??new TextEncoder().encode(text));if(request!==loadRevision)return;workspace.load(text,name,hash);sync();view=[0,spectrum.channels.length-1];refresh();$('answer').textContent='文件已载入，可以开始分析。';}catch(e){showError(e);$('answer').textContent=`导入失败：${e.message}`;}
 }
 function sync(){spectrum=workspace.spectrum;qc=workspace.qc;peaks=workspace.peaks||[];calibration=workspace.calibration;matches=workspace.matches;evidenceChain=workspace.evidence;settings=workspace.settings;}
-function refresh(){sync();updateFlow();if(spectrum){renderUI();renderPeaks();renderMatches();draw();}if(!calibration)$('calResult').textContent='尚未标定';else $('calResult').textContent=`E = ${calibration.slope.toFixed(6)} C + (${calibration.intercept.toFixed(4)}) keV；RMSE ${calibration.rmse.toFixed(4)} keV\n残差：${calibration.points.map(p=>p.residualKeV.toFixed(4)).join(', ')}`;$('trace').textContent=JSON.stringify(workspace.trace,null,2);}
+function refresh(){sync();updateFlow();if(spectrum){renderUI();renderPeaks();renderMatches();}updateTaskUI();updatePeakModeUI();if(spectrum&&taskMode!=='query')draw();if(!calibration)$('calResult').textContent='尚未标定';else $('calResult').textContent=`E = ${calibration.slope.toFixed(6)} C + (${calibration.intercept.toFixed(4)}) keV；RMSE ${calibration.rmse.toFixed(4)} keV\n残差：${calibration.points.map(p=>p.residualKeV.toFixed(4)).join(', ')}`;$('trace').textContent=JSON.stringify(workspace.trace,null,2);}
 function flow(id,text,ready){$(id).textContent=text;$(id).classList.toggle('ready',ready)}
-function updateFlow(){flow('flowData',`① 导入谱：${spectrum?'已共享':'等待'}`,Boolean(spectrum));flow('flowPeaks',`② 寻峰：${workspace.peaks===null?'等待':`已完成 (${workspace.peaks.length})`}`,workspace.peaks!==null);flow('flowCalibration',`③ 标定：${calibration?'已应用':'可选/未完成'}`,Boolean(calibration));flow('flowCandidates',`④ 候选：${workspace.matches===null?'等待':`已完成 (${workspace.matches.length} 峰组)`}；报告${spectrum?'可用':'等待'}`,workspace.matches!==null);const stage=!spectrum?1:workspace.peaks===null?2:!calibration?3:4;$('phase').textContent=`第${'一二三四'[stage-1]}阶段${workspace.matches!==null?'（已完成）':''} · V1.3`;$('flowToggle').textContent=`进度 · 第${'一二三四'[stage-1]}阶段${workspace.matches!==null?'（已完成）':''}`;}
-function options(){return {calibrationText:$('calPoints').value,settings:{smoothingWindow:Number($('smooth').value),minProminencePercent:Number($('prominence').value),minDistance:Number($('distance').value),detectionMode:$('detectionMode').value,minSignificance:Number($('significance').value),snipIterations:Number($('snipIterations').value),fitOverlaps:$('fitOverlaps').checked},matchSettings:{toleranceKeV:Number($('tolerance').value),topN:Number($('topN').value)}};}
+function updateFlow(){flow('flowData',`① 导入谱：${spectrum?'已共享':'等待'}`,Boolean(spectrum));flow('flowPeaks',`② 寻峰：${workspace.peaks===null?'等待':`已完成 (${workspace.peaks.length})`}`,workspace.peaks!==null);flow('flowCalibration',`③ 标定：${calibration?'已应用':'可选/未完成'}`,Boolean(calibration));flow('flowCandidates',`④ 候选：${workspace.matches===null?'等待':`已完成 (${workspace.matches.length} 峰组)`}；报告${spectrum?'可用':'等待'}`,workspace.matches!==null);const stage=!spectrum?1:taskMode==='peaks'?2:workspace.peaks===null?2:!calibration?3:4,complete=taskMode==='peaks'?workspace.peaks!==null:workspace.matches!==null;$('phase').textContent=`第${'一二三四'[stage-1]}阶段${complete?'（已完成）':''}`;$('flowToggle').textContent=`进度 · 第${'一二三四'[stage-1]}阶段${complete?'（已完成）':''}`;}
+function options(){const mode=$('detectionMode').value;return {calibrationText:$('calPoints').value,settings:{smoothingWindow:Number($('smooth').value),minProminencePercent:mode==='global'?Number($('prominence').value):5,minDistance:Number($('distance').value),detectionMode:mode,minSignificance:mode==='global'?4:Number($('significance').value),snipIterations:mode==='snip'?Number($('snipIterations').value):24,fitOverlaps:$('fitOverlaps').checked},matchSettings:{toleranceKeV:Number($('tolerance').value),topN:Number($('topN').value)}};}
 async function sha256(bytes){const hash=await crypto.subtle.digest("SHA-256",bytes);return [...new Uint8Array(hash)].map(v=>v.toString(16).padStart(2,"0")).join("")}
 function decodeSpectrumText(bytes){try{return new TextDecoder('utf-8',{fatal:true}).decode(bytes)}catch{return new TextDecoder('gb18030',{fatal:true}).decode(bytes)}}
 async function loadFile(file) {
@@ -64,7 +111,7 @@ function renderUI() {
 
 function geometry() { const dpr = devicePixelRatio || 1, rect = canvas.getBoundingClientRect(); canvas.width = rect.width * dpr; canvas.height = rect.height * dpr; ctx.setTransform(dpr,0,0,dpr,0,0); return { w:rect.width,h:rect.height,l:55,r:16,t:18,b:38 }; }
 function draw() {
-  if (!spectrum) return; const g=geometry(), [a,b]=view, vals=spectrum.counts.slice(a,b+1), max=vals.reduce((a,b)=>Math.max(a,b),1), yMax=logY?Math.log10(max+1):max;
+  if (!spectrum||$('workspace').classList.contains('hidden')) return; const g=geometry(), [a,b]=view, vals=spectrum.counts.slice(a,b+1), max=vals.reduce((a,b)=>Math.max(a,b),1), yMax=logY?Math.log10(max+1):max;
   ctx.clearRect(0,0,g.w,g.h); ctx.strokeStyle="#d8e3e9"; ctx.fillStyle="#526b7c"; ctx.font="11px monospace"; ctx.lineWidth=1;
   for(let i=0;i<=5;i++){const y=g.t+(g.h-g.t-g.b)*i/5;ctx.beginPath();ctx.moveTo(g.l,y);ctx.lineTo(g.w-g.r,y);ctx.stroke();const val=logY?Math.pow(10,yMax*(1-i/5))-1:max*(1-i/5);ctx.fillText(fmt(val),4,y+4)}
   ctx.beginPath(); ctx.strokeStyle="#24d6c8"; ctx.lineWidth=1.5;
@@ -90,7 +137,7 @@ canvas.addEventListener("mousedown",e=>{dragging=true;lastX=e.clientX}); window.
 $("choose").onclick=()=>$("file").click(); $("newfile").onclick=()=>$("file").click(); $("file").onchange=e=>loadFile(e.target.files[0]); $("demo").onclick=async()=>{try{const response=await fetch("data/demo_cs137.csv");if(!response.ok)throw new Error("演示谱加载失败");const bytes=await response.arrayBuffer();await loadText(new TextDecoder("utf-8",{fatal:true}).decode(bytes),"demo_cs137.csv",bytes);}catch(e){showError(e)}};
 $("reset").onclick=()=>{view=[0,spectrum.channels.length-1];draw()}; $("log").onclick=()=>{logY=!logY;$("log").textContent=logY?"LINEAR Y":"LOG Y";draw()}; window.addEventListener("resize",draw);
 $("prominence").oninput=e=>$("promValue").textContent=`${e.target.value}%`;
-$("detectionMode").addEventListener("change",()=>{if($("detectionMode").value==="snip"&&Number($("significance").value)<8){$("significance").value=8;$("answer").textContent="SNIP模式已采用实测标准谱筛查起点 8σ；这不是通用最优值，请比较不同窗口和阈值。"}});
+$("detectionMode").addEventListener("change",()=>{if($("detectionMode").value==="snip"&&Number($("significance").value)<8){$("significance").value=8;$("answer").textContent="SNIP模式已采用实测标准谱筛查起点 8σ；这不是通用最优值，请比较不同窗口和阈值。"}updatePeakModeUI()});
 $("query").onclick=()=>{try{const energy=Number($("queryEnergy").value),tolerance=Number($("tolerance").value);const candidates=queryGammaLines(nuclearDb,energy,tolerance,Number($("topN").value)).map(c=>({...c,status:"insufficient_evidence",companions:[]}));renderMatches([{peakId:null,measuredEnergyKeV:energy,toleranceKeV:tolerance,candidates}])}catch(e){showError(e)}};
 $("exportCsv").onclick=()=>{const en=window.uiLanguage?.()==='en',head=en?"id,centroid_channel,energy_keV,height,local_significance_sigma,detection_mode,net_area_roi,fwhm_channels,roi_start,roi_end":"编号,质心通道,能量_keV,峰高,局部显著性_sigma,检测模式,ROI净面积,FWHM_通道,ROI起点,ROI终点",rows=peaks.map(p=>[p.id,p.centroidChannel,p.energyKeV??"",p.height,p.significance??"",p.detectionMode??"",p.netArea,p.fwhmChannels,spectrum.channels[p.roiStart],spectrum.channels[p.roiEnd]].join(",")),suffix=en?'_peaks.csv':'_峰结果.csv';download(`${spectrum.filename.replace(/\.[^.]+$/,'')}${suffix}`,['\ufeff'+head,...rows].join("\n"),"text/csv;charset=utf-8")};
 for(const event of ["dragenter","dragover"]){$("drop").addEventListener(event,e=>{e.preventDefault();$("drop").classList.add("drag")})}for(const event of ["dragleave","drop"]){$("drop").addEventListener(event,e=>{$("drop").classList.remove("drag");if(event==="drop"){e.preventDefault();loadFile(e.dataTransfer.files[0])}})}
@@ -100,7 +147,8 @@ function renderDatabaseTable(){if(!nuclearDb)return;const en=window.uiLanguage?.
 fetch("data/nuclear-lines.json").then(r=>{if(!r.ok)throw new Error();return r.json()}).then(db=>{nuclearDb=db;workspace.database=db;populateCalibrationSources(db);renderDatabaseTable();$("dbStatus").textContent=`核数据已就绪 · ${db.lines.length} 条`;$("dbVersion").textContent=`${db.datasetId} · 获取 ${db.retrievedAt}`}).catch(()=>{$("dbStatus").textContent="核数据库不可用"});
 
 function guarded(fn){return ()=>{try{fn();}catch(e){showError(e);$('answer').textContent=e.message;}finally{refresh();}};}
-$('find').onclick=guarded(()=>workspace.search(options().settings));
+function peakSummary(){return `文件：${workspace.spectrum.filename}\nQC：${workspace.qc.level.toUpperCase()}；总计数 ${workspace.qc.summary.totalCounts}。\n检出 ${workspace.peaks.length} 个候选峰。\n仅寻峰不需要能量标定；请复核峰形与筛查阈值。`}
+$('find').onclick=guarded(()=>{workspace.search(options().settings);$('answer').textContent=peakSummary()});
 $('calibrate').onclick=guarded(()=>workspace.calibrate($('calPoints').value));
 $('suggestCalibration').onclick=guarded(()=>{if(workspace.peaks===null)workspace.search(options().settings);const suggestion=suggestCalibrationPoints(workspace.peaks,nuclearDb,$('calNuclide').value);workspace.invalidate();workspace.calibration=null;workspace.peaks=workspace.peaks.map(p=>({...p,energyKeV:null,fwhmKeV:null}));$('calPoints').value='channel,energy_keV\n'+suggestion.points.map(p=>`${p.channel.toFixed(6)},${p.energyKeV.toFixed(6)}`).join('\n');$('autoCalResult').textContent=`建议：${suggestion.nuclide}；峰 ${suggestion.points.map(p=>p.peakId).join('、')}；预拟合 RMSE ${suggestion.calibration.rmse.toFixed(4)} keV。${suggestion.warning}`;workspace.record('suggest_calibration',{nuclide:suggestion.nuclide,peakIds:suggestion.points.map(p=>p.peakId),lineIds:suggestion.points.map(p=>p.lineId)});$('answer').textContent='自动建议已填入，但尚未应用。请核对标准源、峰号和参考能量后点击“拟合并应用”。';});
 $('identify').onclick=guarded(()=>workspace.match(options().matchSettings));
@@ -115,18 +163,23 @@ for(const id of ['calPoints','smooth','distance','prominence','detectionMode','s
   if(['smooth','distance','prominence','detectionMode','significance','snipIterations','fitOverlaps'].includes(id))workspace.peaks=null;
   $('answer').textContent='输入已修改，相关旧结果已失效，请重新执行。';refresh();
 });
-function runAssistantCommand(command){$('prompt').value=command;$('assistantForm').requestSubmit()}
+function runAssistantCommand(command){selectTask(offlinePlan(command).action);$('prompt').value=command;if(!spectrum){$('answer').textContent=taskHints[taskMode];return}$('assistantForm').requestSubmit()}
 for(const button of document.querySelectorAll('[data-command]'))button.onclick=()=>runAssistantCommand(button.dataset.command);
-$('quickQuery').onclick=()=>{const energy=$('quickEnergy').value.trim();$('databaseFilter').value=energy;renderDatabaseTable();$('databaseDialog').showModal()};
+function openDatabase(){selectTask('query');$('answer').textContent=taskHints.query;const energy=$('quickEnergy').value.trim();$('databaseFilter').value=energy;renderDatabaseTable();$('databaseDialog').showModal()}
+$('quickQuery').onclick=openDatabase;
+$('browseDatabase').onclick=openDatabase;
 $('databaseFilter').oninput=renderDatabaseTable;
 $('closeDatabase').onclick=()=>$('databaseDialog').close();
 $('databaseDialog').onclick=e=>{if(e.target===e.currentTarget)e.currentTarget.close()};
 window.addEventListener('nexus-language-change',()=>{if(nuclearDb)renderDatabaseTable();renderMatches(displayedGroups)});
 $('assistantForm').onsubmit=async event=>{event.preventDefault();const prompt=$('prompt').value.trim();if(!prompt)return;const revision=workspace.revision;$('send').disabled=true;try{
+  selectTask(offlinePlan(prompt).action);
   const mode=$('assistantMode').value;let plan,provenance;
   if(mode==='manual'){const prepared=manualPrompt(prompt);if(manualPreparedFor!==prompt){manualPreparedFor=prompt;$('manualPrompt').value=prepared;$('manualResponse').value='';$('answer').textContent='已生成完整路由提示。请将它发送给当前真实模型，原样粘贴 JSON 回复后再次执行。';return}plan=validatePlanForPrompt(parseModelPlan($('manualResponse').value),prompt);provenance={provider:'manual',model:$('modelName').value.trim()||'unlabeled',origin:'user_pasted_not_authenticated'};}
   else if(mode!=='offline'){$('answer').textContent='正在等待模型（最长 45 秒）…';const response=await fetch('/api/assistant',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({prompt,model:$('modelName').value,provider:mode}),signal:AbortSignal.timeout(50000)});const payload=await response.json();if(!response.ok)throw new Error(payload.error||'模型不可用，可切换离线操作助手。');plan=validatePlan(payload.plan);provenance={provider:payload.provider,model:payload.model,origin:'server_api'};}else{plan=offlinePlan(prompt);provenance={provider:'offline-rules',model:'none',origin:'deterministic'};}
   if(revision!==workspace.revision)throw new Error('分析输入已改变，本次助手操作已取消，请重新提交。');
-  workspace.record('assistant_plan',{...provenance,action:plan.action});const result=executePlan(plan,workspace,options());refresh();$('answer').textContent=(mode==='offline'?'离线操作助手\n':mode==='manual'?'手动真实模型输出已通过契约校验；来源未经应用认证\n':`${provenance.provider} 模型选择操作；工具生成证据解释\n`)+result.text;
+  selectTask(plan.action);workspace.record('assistant_plan',{...provenance,action:plan.action});const result=executePlan(plan,workspace,options());refresh();const text=plan.action==='peaks'?peakSummary():result.text;$('answer').textContent=(mode==='offline'?'离线操作助手\n':mode==='manual'?'手动真实模型输出已通过契约校验；来源未经应用认证\n':`${provenance.provider} 模型选择操作；工具生成证据解释\n`)+text;
+  if(result.query){$('quickEnergy').value=result.query.energyKeV;openDatabase();$('answer').textContent=text}
   if(result.report){const lang=window.uiLanguage?.()||'zh';download(lang==='en'?'Nexus-NAA-report.html':'Nexus-NAA-分析报告.html',htmlReport(result.result,lang),'text/html')}
 }catch(e){refresh();$('answer').textContent=e.message;}finally{$('send').disabled=false;}};
+refresh();

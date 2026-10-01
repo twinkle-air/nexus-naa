@@ -8,7 +8,7 @@ import {importSpreadsheet} from './file-import.mjs';
 
 const root = fileURLToPath(new URL('.',import.meta.url));
 const port = Number(process.env.PORT || 4173);
-const types = { ".html": "text/html; charset=utf-8", ".js": "text/javascript; charset=utf-8", ".css": "text/css; charset=utf-8", ".csv": "text/csv; charset=utf-8", ".md": "text/markdown; charset=utf-8" };
+const types = { ".html": "text/html; charset=utf-8", ".js": "text/javascript; charset=utf-8", ".css": "text/css; charset=utf-8", ".csv": "text/csv; charset=utf-8", ".md": "text/markdown; charset=utf-8", ".png": "image/png" };
 async function readJson(req,limit){let body='';for await(const chunk of req){body+=chunk;if(Buffer.byteLength(body)>limit)throw new Error('请求过大');}return JSON.parse(body||'{}')}
 async function readBytes(req,limit){const chunks=[];let size=0;for await(const chunk of req){size+=chunk.length;if(size>limit)throw new Error('文件超过 20 MB 限制');chunks.push(chunk)}return Buffer.concat(chunks)}
 
@@ -30,7 +30,7 @@ createServer(async (req, res) => {
     if(req.method!=='GET' && req.method!=='HEAD')throw new Error('Unsupported method');
     const pathname = decodeURIComponent(new URL(req.url, "http://localhost").pathname);
     const relative = pathname === "/" ? "index.html" : pathname.slice(1);
-    if(!/^(index\.html|styles\.css|analysis\.css|assistant\.css|light-theme\.css|src\/[a-z0-9-]+\.js|data\/[a-zA-Z0-9_.-]+|docs\/[a-zA-Z0-9_.-]+)$/.test(relative))throw new Error('Forbidden');
+    if(!/^(index\.html|styles\.css|analysis\.css|assistant\.css|light-theme\.css|src\/[a-z0-9-]+\.js|assets\/[a-zA-Z0-9_.-]+\.png|data\/[a-zA-Z0-9_.-]+|docs\/[a-zA-Z0-9_.-]+)$/.test(relative))throw new Error('Forbidden');
     const file = normalize(join(root, relative));
     if (!file.startsWith(root)) throw new Error("Forbidden");
     if (!(await stat(file)).isFile()) throw new Error("Not found");

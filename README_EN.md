@@ -1,5 +1,7 @@
 # Nexus-NAA · V1.3
 
+<img src="assets/nexus-naa-skill-icon.png" width="80" height="80" alt="Nexus-NAA icon">
+
 [中文](README.md)
 
 > An evidence-driven intelligent analysis platform and Agent Skill for neutron activation analysis
@@ -10,10 +12,11 @@ Nexus-NAA is an evidence-driven gamma-spectrum analysis agent for neutron activa
 
 ## Agent Workbench
 
-![Nexus-NAA V1.3 running workbench with the assistant, shared data flow, and spectrum import area](assets/nexus-naa-workbench-v1.3.png)
+![Current Nexus-NAA workbench with the new icon, assistant, shared data flow, and spectrum import area](assets/nexus-naa-workbench-2026-10-01-en.png)
 
 ## Changelog
 
+- **V1.3 interface update (2026-10-01):** Workspaces now follow the selected task: full analysis, peak search, reliability review, reporting, or nuclear-data lookup. Peak settings and help follow the detection mode, and hidden settings do not supply that mode's input. Simplified page titles and phase labels, updated bilingual interface text and the source name of the user-provided nuclear data. Replaced the icon with the supplied green atom artwork, removed its exterior white background, and refreshed the header, browser icon, and workbench screenshots.
 - **V1.3 (2026-09-24):** Broad tolerance retains candidates; a narrower support window and line-independence checks determine `supported` status. Added canonical JSON SHA-256 analysis fingerprints and an executable identification quality gate. Refreshed the screenshot from the running V1.3 interface.
 - **V1.2:** Reconstructed and checked complete nuclide evidence before reporting; enforced Ajv 8 JSON Schemas at CLI, HTTP, and MCP boundaries; added same-snapshot reporting, host-behavior evaluation, and a three-system reference-spectrum comparison.
 - **V1.1:** Added the Skill decision workflow, deterministic tools, structured input/output contracts, and result-consistency validation.

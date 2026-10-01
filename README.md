@@ -1,5 +1,7 @@
 # Nexus-NAA · V1.3
 
+<img src="assets/nexus-naa-skill-icon.png" width="80" height="80" alt="Nexus-NAA 图标">
+
 [English](README_EN.md)
 
 > 面向中子活化分析的证据驱动智能分析平台与 Agent Skill
@@ -12,10 +14,11 @@ Nexus-NAA is an evidence-driven gamma-spectrum analysis agent for neutron activa
 
 ## 智能体页面
 
-![Nexus-NAA V1.3 实际页面：分析助手、共享数据流和能谱导入区](assets/nexus-naa-workbench-v1.3.png)
+![Nexus-NAA 当前实际页面：新图标、分析助手、共享数据流和能谱导入区](assets/nexus-naa-workbench-2026-10-01-zh.png)
 
 ## 更新日志
 
+- **V1.3 页面更新（2026-10-01）**：按完整分析、仅寻峰、可靠性复核、报告和核数据查询切换工作区；寻峰参数与说明随检测模式显示，隐藏参数不参与当前模式输入。简化页面标题和阶段标签，更新中英界面文案及用户提供核数据的来源名称。替换为用户提供的绿色原子图标，去除外部白色背景，并更新页眉、浏览器图标与最新页面截图。
 - **V1.3（2026-09-24）**：宽容差用于保留候选，窄支持窗与谱线独立性审查决定能否标为 `supported`；新增规范化 JSON 的 SHA-256 分析指纹和识别质量失败门槛。页面截图已更新为 V1.3 实际运行界面。
 - **V1.2**：报告前重建并核对完整核素证据；用 Ajv 8 在 CLI、HTTP、MCP 入口执行 JSON Schema；增加同一快照报告、宿主行为评测与三系统参考谱对照。
 - **V1.1**：建立 Skill 决策流程、确定性工具、结构化输入输出和结果一致性验证。

@@ -11,7 +11,7 @@
       "version": "2008-08"
     },
     "COMPETITION_LIBRARY_2026": {
-      "name": "User-supplied competition nuclide library workbook",
+      "name": "User-provided nuclide library (from Southwest Radiation Monitoring Institute)",
       "url": "data/reference-nuclide-library.xlsx",
       "version": "received-2026-09-06",
       "sha256": "a818b34161319527cb913d92414c890b967faa0b2f6d2eae408406417d103a39",

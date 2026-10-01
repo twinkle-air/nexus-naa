@@ -24,3 +24,4 @@ body{background:#f6f9fb;color:var(--text)}header{background:#fff;border-color:va
   .data-flow #flowClose{display:block;border:0;background:transparent;color:#526b7c;font-size:24px;line-height:1;cursor:pointer}
 }
 @media(prefers-reduced-motion:reduce){.data-flow{transition:none}}
+.brand-icon{display:block;width:44px;height:44px;object-fit:contain;flex-shrink:0}
