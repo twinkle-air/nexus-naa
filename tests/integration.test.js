@@ -12,7 +12,7 @@ test('UI fixture connects all four stages with exact data citations',()=>{
   assert.ok(result.matching.every(m=>m.candidates.some(c=>c.nuclide==='Co-60'&&c.status==='supported')));
   const records=result.evidence.evidence.filter(e=>e.type==='nuclear_data');
   assert.ok(records.length>0);assert.ok(records.every(e=>e.recordId&&e.sourceUrl.includes('#page=')));
-  assert.match(htmlReport(result),/SYNTHETIC/);
+  assert.match(htmlReport(result,'zh',db),/SYNTHETIC/);
 });
 test('zero-peak matching still validates invalid tolerance',()=>{
   const w=new Workspace(db);w.load('0,0\n1,0\n2,0','zeros.csv');w.calibrate('0,0\n2,2');w.search();

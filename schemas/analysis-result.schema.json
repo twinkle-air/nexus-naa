@@ -3,18 +3,1363 @@
   "$id": "https://github.com/twinkle-air/nexus-naa/schemas/analysis-result.schema.json",
   "title": "Nexus-NAA analysis result V1.3",
   "type": "object",
-  "required": ["schemaVersion", "skillContractVersion", "softwareVersion", "revision", "generatedAt", "source", "spectrum", "qc", "calibration", "peakSearch", "matchSettings", "peaks", "matching", "nuclideCandidates", "evidence", "database", "trace", "warnings"],
+  "required": [
+    "schemaVersion",
+    "skillContractVersion",
+    "softwareVersion",
+    "revision",
+    "generatedAt",
+    "source",
+    "spectrum",
+    "qc",
+    "calibration",
+    "peakSearch",
+    "matchSettings",
+    "peaks",
+    "matching",
+    "nuclideCandidates",
+    "evidence",
+    "database",
+    "trace",
+    "warnings"
+  ],
   "properties": {
-    "schemaVersion": { "const": "0.4" }, "skillContractVersion": { "const": "1.3.0" }, "softwareVersion": { "const": "1.3.0" },
-    "revision": { "type": "integer", "minimum": 1 }, "generatedAt": { "type": "string" },
-    "source": { "type": "object", "required": ["filename", "sha256"], "properties": { "filename": { "type": "string" }, "sha256": { "type": ["string", "null"], "pattern": "^[a-fA-F0-9]{64}$" } }, "additionalProperties": false },
-    "spectrum": { "type": "object", "required": ["filename", "format", "channels", "counts", "warnings", "sha256"], "properties": { "filename": { "type": "string" }, "format": { "type": "string" }, "channels": { "type": "array", "items": { "type": "integer", "minimum": 0 }, "minItems": 1 }, "counts": { "type": "array", "items": { "type": "number", "minimum": 0 }, "minItems": 1 }, "warnings": { "type": "array", "items": { "type": "string" } }, "sha256": { "type": ["string", "null"], "pattern": "^[a-fA-F0-9]{64}$" } }, "additionalProperties": false },
-    "qc": { "type": "object", "required": ["level", "checks", "summary"], "properties": { "level": { "enum": ["pass", "warning"] }, "checks": { "type": "array" }, "summary": { "type": "object" } }, "additionalProperties": false },
-    "calibration": { "type": ["object", "null"] }, "peakSearch": { "type": "object" }, "matchSettings": { "type": "object" },
-    "peaks": { "type": ["array", "null"] }, "matching": { "type": ["array", "null"] },
-    "nuclideCandidates": { "type": ["array", "null"], "items": { "$ref": "evidence.schema.json" } },
-    "evidence": { "type": ["object", "null"] },
-    "database": { "type": ["object", "null"] }, "trace": { "type": "array" }, "warnings": { "type": "array", "items": { "type": "string" } }
+    "schemaVersion": {
+      "const": "0.4"
+    },
+    "skillContractVersion": {
+      "const": "1.3.0"
+    },
+    "softwareVersion": {
+      "const": "1.3.0"
+    },
+    "revision": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "generatedAt": {
+      "type": "string"
+    },
+    "source": {
+      "type": "object",
+      "required": [
+        "filename",
+        "sha256"
+      ],
+      "properties": {
+        "filename": {
+          "type": "string"
+        },
+        "sha256": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "pattern": "^[a-fA-F0-9]{64}$"
+        }
+      },
+      "additionalProperties": false
+    },
+    "spectrum": {
+      "type": "object",
+      "required": [
+        "filename",
+        "format",
+        "channels",
+        "counts",
+        "warnings",
+        "sha256"
+      ],
+      "properties": {
+        "filename": {
+          "type": "string"
+        },
+        "format": {
+          "type": "string"
+        },
+        "channels": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "minItems": 1
+        },
+        "counts": {
+          "type": "array",
+          "items": {
+            "type": "number",
+            "minimum": 0
+          },
+          "minItems": 1
+        },
+        "warnings": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "sha256": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "pattern": "^[a-fA-F0-9]{64}$"
+        }
+      },
+      "additionalProperties": false
+    },
+    "qc": {
+      "$ref": "#/$defs/aQc"
+    },
+    "calibration": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/aCalibration"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "peakSearch": {
+      "$ref": "#/$defs/aPeakSettings"
+    },
+    "matchSettings": {
+      "$ref": "#/$defs/aMatchSettings"
+    },
+    "peaks": {
+      "anyOf": [
+        {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/aPeak"
+          }
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "matching": {
+      "anyOf": [
+        {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/aMatch"
+          }
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "nuclideCandidates": {
+      "type": [
+        "array",
+        "null"
+      ],
+      "items": {
+        "$ref": "evidence.schema.json"
+      }
+    },
+    "evidence": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/aEvidence"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "database": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/aDatabase"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "trace": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "tool": {
+            "type": "string"
+          },
+          "revision": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "at": {
+            "type": "string"
+          },
+          "sourceSchema": {
+            "type": "string"
+          },
+          "recomputed": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "tool",
+          "revision",
+          "at"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "warnings": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
   },
-  "additionalProperties": false
+  "additionalProperties": false,
+  "$defs": {
+    "aQc": {
+      "type": "object",
+      "properties": {
+        "level": {
+          "enum": [
+            "pass",
+            "warning"
+          ]
+        },
+        "checks": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "label": {
+                "type": "string"
+              },
+              "level": {
+                "enum": [
+                  "pass",
+                  "warning"
+                ]
+              },
+              "detail": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "label",
+              "level",
+              "detail"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "summary": {
+          "type": "object",
+          "properties": {
+            "channelCount": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "totalCounts": {
+              "type": "number"
+            },
+            "meanCounts": {
+              "type": "number"
+            },
+            "maxCounts": {
+              "type": "number"
+            },
+            "maxChannel": {
+              "type": "number"
+            },
+            "minChannel": {
+              "type": "number"
+            },
+            "maxChannelNumber": {
+              "type": "number"
+            }
+          },
+          "required": [
+            "channelCount",
+            "totalCounts",
+            "meanCounts",
+            "maxCounts",
+            "maxChannel",
+            "minChannel",
+            "maxChannelNumber"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "level",
+        "checks",
+        "summary"
+      ],
+      "additionalProperties": false
+    },
+    "aCalibration": {
+      "type": "object",
+      "properties": {
+        "model": {
+          "const": "linear"
+        },
+        "slope": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "intercept": {
+          "type": "number"
+        },
+        "rmse": {
+          "type": "number",
+          "minimum": 0
+        },
+        "rSquared": {
+          "type": "number"
+        },
+        "points": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "channel": {
+                "type": "number"
+              },
+              "energyKeV": {
+                "type": "number"
+              },
+              "predictedKeV": {
+                "type": "number"
+              },
+              "residualKeV": {
+                "type": "number"
+              }
+            },
+            "required": [
+              "channel",
+              "energyKeV",
+              "predictedKeV",
+              "residualKeV"
+            ],
+            "additionalProperties": false
+          },
+          "minItems": 2
+        },
+        "pointCount": {
+          "type": "integer",
+          "minimum": 2
+        },
+        "validationStatus": {
+          "enum": [
+            "two_point_unverified",
+            "limited_multipoint",
+            "multipoint"
+          ]
+        },
+        "referenceRangeChannel": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "minItems": 2,
+          "maxItems": 2
+        },
+        "referenceRangeKeV": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "minItems": 2,
+          "maxItems": 2
+        },
+        "warnings": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "required": [
+        "model",
+        "slope",
+        "intercept",
+        "rmse",
+        "rSquared",
+        "points",
+        "pointCount",
+        "validationStatus",
+        "referenceRangeChannel",
+        "referenceRangeKeV",
+        "warnings"
+      ],
+      "additionalProperties": false
+    },
+    "aPeak": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "index": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "centroidIndex": {
+          "type": "number"
+        },
+        "height": {
+          "type": "number"
+        },
+        "prominence": {
+          "type": "number"
+        },
+        "fwhmChannels": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "roiStart": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "roiEnd": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "netArea": {
+          "type": "number"
+        },
+        "significance": {
+          "type": "number"
+        },
+        "detectionMode": {
+          "enum": [
+            "adaptive",
+            "snip",
+            "global"
+          ]
+        },
+        "backgroundMethod": {
+          "enum": [
+            "local_minima",
+            "snip_lls_decreasing_window"
+          ]
+        },
+        "widthMethod": {
+          "type": "string"
+        },
+        "areaMethod": {
+          "type": "string"
+        },
+        "channel": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "centroidChannel": {
+          "type": "number"
+        },
+        "energyKeV": {
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "fwhmKeV": {
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "overlapFit": {
+          "type": "object",
+          "properties": {
+            "objective": {
+              "type": "number"
+            },
+            "rmse": {
+              "type": "number"
+            },
+            "background": {
+              "type": "object",
+              "properties": {
+                "intercept": {
+                  "type": "number"
+                },
+                "slopePerRoi": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "intercept",
+                "slopePerRoi"
+              ],
+              "additionalProperties": false
+            },
+            "components": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "centerIndex": {
+                    "type": "number"
+                  },
+                  "sigmaChannels": {
+                    "type": "number",
+                    "exclusiveMinimum": 0
+                  },
+                  "fwhmChannels": {
+                    "type": "number",
+                    "exclusiveMinimum": 0
+                  },
+                  "height": {
+                    "type": "number"
+                  },
+                  "area": {
+                    "type": "number"
+                  }
+                },
+                "required": [
+                  "centerIndex",
+                  "sigmaChannels",
+                  "fwhmChannels",
+                  "height",
+                  "area"
+                ],
+                "additionalProperties": false
+              },
+              "minItems": 2,
+              "maxItems": 2
+            },
+            "roiStart": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "roiEnd": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "method": {
+              "const": "bounded_grid_weighted_double_gaussian_linear_background"
+            },
+            "converged": {
+              "type": "boolean"
+            }
+          },
+          "required": [
+            "objective",
+            "rmse",
+            "background",
+            "components",
+            "roiStart",
+            "roiEnd",
+            "method",
+            "converged"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "id",
+        "index",
+        "centroidIndex",
+        "height",
+        "prominence",
+        "fwhmChannels",
+        "roiStart",
+        "roiEnd",
+        "netArea",
+        "significance",
+        "detectionMode",
+        "backgroundMethod",
+        "widthMethod",
+        "areaMethod",
+        "channel",
+        "centroidChannel",
+        "energyKeV"
+      ],
+      "additionalProperties": false
+    },
+    "aSource": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "url": {
+          "type": "string"
+        },
+        "version": {
+          "type": "string"
+        },
+        "sha256": {
+          "type": "string"
+        },
+        "qualification": {
+          "type": "string"
+        },
+        "auditReport": {
+          "type": "string"
+        },
+        "auditedAt": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "name",
+        "url",
+        "version"
+      ],
+      "additionalProperties": false
+    },
+    "aSources": {
+      "type": "object",
+      "additionalProperties": {
+        "$ref": "#/$defs/aSource"
+      }
+    },
+    "aCompanion": {
+      "type": "object",
+      "required": [
+        "lineId",
+        "energyKeV",
+        "intensityPercent",
+        "foundPeakId",
+        "status",
+        "sourceId",
+        "sourceUrl",
+        "supportEligible",
+        "supportWindowKeV",
+        "independenceStatus",
+        "supportExclusionReasons"
+      ],
+      "properties": {
+        "lineId": {
+          "type": "string"
+        },
+        "energyKeV": {
+          "type": "number"
+        },
+        "intensityPercent": {
+          "type": "number"
+        },
+        "foundPeakId": {
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "status": {
+          "$ref": "evidence.schema.json#/$defs/lineStatus"
+        },
+        "sourceId": {
+          "type": "string"
+        },
+        "sourceUrl": {
+          "type": "string"
+        },
+        "supportEligible": {
+          "type": "boolean"
+        },
+        "supportWindowKeV": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "exclusiveMinimum": 0
+        },
+        "independenceStatus": {
+          "$ref": "evidence.schema.json#/$defs/independenceStatus"
+        },
+        "supportExclusionReasons": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "aCandidate": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "nuclide": {
+          "type": "string"
+        },
+        "element": {
+          "type": "string"
+        },
+        "energyKeV": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "intensityPercent": {
+          "type": "number",
+          "minimum": 0
+        },
+        "mode": {
+          "enum": [
+            "decay",
+            "annihilation"
+          ]
+        },
+        "sourceId": {
+          "type": "string"
+        },
+        "sourcePage": {
+          "type": "number"
+        },
+        "sourceUrl": {
+          "type": "string"
+        },
+        "verification": {
+          "type": "string"
+        },
+        "deltaKeV": {
+          "type": "number"
+        },
+        "absDeltaKeV": {
+          "type": "number"
+        },
+        "source": {
+          "$ref": "#/$defs/aSource"
+        },
+        "score": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 100
+        },
+        "status": {
+          "$ref": "evidence.schema.json#/$defs/candidateStatus"
+        },
+        "companions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/aCompanion"
+          }
+        },
+        "evidenceId": {
+          "type": "string"
+        },
+        "calibrationUse": {
+          "enum": [
+            "within_reference_range",
+            "extrapolated",
+            "not_assessable"
+          ]
+        },
+        "supportEligible": {
+          "type": "boolean"
+        },
+        "supportWindowKeV": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "exclusiveMinimum": 0
+        },
+        "independenceStatus": {
+          "$ref": "evidence.schema.json#/$defs/independenceStatus"
+        },
+        "supportExclusionReasons": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "contradictions": {
+          "type": "array",
+          "items": {
+            "$ref": "evidence.schema.json#/$defs/contradiction"
+          }
+        },
+        "interferences": {
+          "type": "array",
+          "items": {
+            "$ref": "evidence.schema.json#/$defs/interference"
+          }
+        },
+        "missingInformation": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "halfLife": {
+          "type": "string"
+        },
+        "auditSourceUrl": {
+          "type": "string"
+        },
+        "proxyFor": {
+          "type": "string"
+        },
+        "proxyCondition": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "nuclide",
+        "element",
+        "energyKeV",
+        "intensityPercent",
+        "mode",
+        "sourceId",
+        "sourcePage",
+        "sourceUrl",
+        "verification",
+        "deltaKeV",
+        "absDeltaKeV",
+        "source",
+        "score",
+        "status",
+        "companions",
+        "evidenceId",
+        "calibrationUse",
+        "supportEligible",
+        "supportWindowKeV",
+        "independenceStatus",
+        "supportExclusionReasons",
+        "contradictions",
+        "interferences",
+        "missingInformation"
+      ],
+      "additionalProperties": false
+    },
+    "aMatch": {
+      "type": "object",
+      "properties": {
+        "peakId": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "measuredEnergyKeV": {
+          "type": "number"
+        },
+        "toleranceKeV": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "calibrationUse": {
+          "enum": [
+            "within_reference_range",
+            "extrapolated",
+            "not_assessable"
+          ]
+        },
+        "candidates": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/aCandidate"
+          }
+        },
+        "conclusion": {
+          "enum": [
+            "candidate_only",
+            "insufficient_evidence"
+          ]
+        }
+      },
+      "required": [
+        "peakId",
+        "measuredEnergyKeV",
+        "toleranceKeV",
+        "calibrationUse",
+        "candidates",
+        "conclusion"
+      ],
+      "additionalProperties": false
+    },
+    "aEvidenceRow": {
+      "oneOf": [
+        {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string"
+            },
+            "evidence_id": {
+              "type": "string"
+            },
+            "type": {
+              "const": "measured_spectrum"
+            },
+            "filename": {
+              "type": "string"
+            },
+            "sha256": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "pattern": "^[a-fA-F0-9]{64}$"
+            },
+            "channelCount": {
+              "type": "number"
+            }
+          },
+          "required": [
+            "id",
+            "evidence_id",
+            "type",
+            "filename",
+            "sha256",
+            "channelCount"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string"
+            },
+            "evidence_id": {
+              "type": "string"
+            },
+            "type": {
+              "const": "calibration"
+            },
+            "model": {
+              "type": "string"
+            },
+            "slope": {
+              "type": "number"
+            },
+            "intercept": {
+              "type": "number"
+            },
+            "rmseKeV": {
+              "type": "number"
+            },
+            "referenceRangeKeV": {
+              "type": "array",
+              "items": {
+                "type": "number"
+              }
+            },
+            "dependsOn": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          "required": [
+            "id",
+            "evidence_id",
+            "type",
+            "model",
+            "slope",
+            "intercept",
+            "rmseKeV",
+            "referenceRangeKeV",
+            "dependsOn"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string"
+            },
+            "evidence_id": {
+              "type": "string"
+            },
+            "type": {
+              "const": "nuclear_data"
+            },
+            "nuclide": {
+              "type": "string"
+            },
+            "referenceEnergyKeV": {
+              "type": "number"
+            },
+            "sourceId": {
+              "type": "string"
+            },
+            "recordId": {
+              "type": "string"
+            },
+            "sourcePage": {
+              "type": "number"
+            },
+            "sourceUrl": {
+              "type": "string"
+            },
+            "datasetId": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "id",
+            "evidence_id",
+            "type",
+            "nuclide",
+            "referenceEnergyKeV",
+            "sourceId",
+            "recordId",
+            "sourcePage",
+            "sourceUrl",
+            "datasetId"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string"
+            },
+            "evidence_id": {
+              "type": "string"
+            },
+            "type": {
+              "const": "energy_match"
+            },
+            "peakId": {
+              "type": "number"
+            },
+            "nuclide": {
+              "type": "string"
+            },
+            "recordId": {
+              "type": "string"
+            },
+            "measuredEnergyKeV": {
+              "type": "number"
+            },
+            "referenceEnergyKeV": {
+              "type": "number"
+            },
+            "deltaKeV": {
+              "type": "number"
+            },
+            "toleranceKeV": {
+              "type": "number"
+            },
+            "calibrationUse": {
+              "enum": [
+                "within_reference_range",
+                "extrapolated",
+                "not_assessable"
+              ]
+            },
+            "supportEligible": {
+              "type": "boolean"
+            },
+            "supportWindowKeV": {
+              "type": [
+                "number",
+                "null"
+              ],
+              "exclusiveMinimum": 0
+            },
+            "independenceStatus": {
+              "$ref": "evidence.schema.json#/$defs/independenceStatus"
+            },
+            "supportExclusionReasons": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "companionChecks": {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/aCompanion"
+              }
+            },
+            "contradictions": {
+              "type": "array",
+              "items": {
+                "$ref": "evidence.schema.json#/$defs/contradiction"
+              }
+            },
+            "interferences": {
+              "type": "array",
+              "items": {
+                "$ref": "evidence.schema.json#/$defs/interference"
+              }
+            },
+            "dependsOn": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          "required": [
+            "id",
+            "evidence_id",
+            "type",
+            "peakId",
+            "nuclide",
+            "recordId",
+            "measuredEnergyKeV",
+            "referenceEnergyKeV",
+            "deltaKeV",
+            "toleranceKeV",
+            "calibrationUse",
+            "supportEligible",
+            "supportWindowKeV",
+            "independenceStatus",
+            "supportExclusionReasons",
+            "companionChecks",
+            "contradictions",
+            "interferences",
+            "dependsOn"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string"
+            },
+            "evidence_id": {
+              "type": "string"
+            },
+            "type": {
+              "const": "companion_check"
+            },
+            "nuclide": {
+              "type": "string"
+            },
+            "parentEvidenceId": {
+              "type": "string"
+            },
+            "recordId": {
+              "type": "string"
+            },
+            "referenceEnergyKeV": {
+              "type": "number"
+            },
+            "status": {
+              "$ref": "evidence.schema.json#/$defs/lineStatus"
+            },
+            "foundPeakId": {
+              "type": [
+                "integer",
+                "null"
+              ],
+              "minimum": 1
+            },
+            "sourceId": {
+              "type": "string"
+            },
+            "sourceUrl": {
+              "type": "string"
+            },
+            "supportEligible": {
+              "type": "boolean"
+            },
+            "supportWindowKeV": {
+              "type": [
+                "number",
+                "null"
+              ],
+              "exclusiveMinimum": 0
+            },
+            "independenceStatus": {
+              "type": "string"
+            },
+            "supportExclusionReasons": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "dependsOn": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          "required": [
+            "id",
+            "evidence_id",
+            "type",
+            "nuclide",
+            "parentEvidenceId",
+            "recordId",
+            "referenceEnergyKeV",
+            "status",
+            "foundPeakId",
+            "sourceId",
+            "sourceUrl",
+            "supportEligible",
+            "supportWindowKeV",
+            "independenceStatus",
+            "supportExclusionReasons",
+            "dependsOn"
+          ],
+          "additionalProperties": false
+        }
+      ]
+    },
+    "aEvidence": {
+      "type": "object",
+      "properties": {
+        "dataset": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string"
+            },
+            "retrievedAt": {
+              "type": "string"
+            },
+            "sources": {
+              "$ref": "#/$defs/aSources"
+            }
+          },
+          "required": [
+            "id",
+            "retrievedAt",
+            "sources"
+          ],
+          "additionalProperties": false
+        },
+        "evidence": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/aEvidenceRow"
+          }
+        },
+        "claims": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "statement": {
+                "type": "string"
+              },
+              "level": {
+                "$ref": "evidence.schema.json#/$defs/candidateStatus"
+              },
+              "score": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 100
+              },
+              "evidenceIds": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "disclaimer": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id",
+              "statement",
+              "level",
+              "score",
+              "evidenceIds",
+              "disclaimer"
+            ],
+            "additionalProperties": false
+          }
+        }
+      },
+      "required": [
+        "dataset",
+        "evidence",
+        "claims"
+      ],
+      "additionalProperties": false
+    },
+    "aDatabase": {
+      "type": "object",
+      "properties": {
+        "datasetId": {
+          "type": "string"
+        },
+        "sources": {
+          "$ref": "#/$defs/aSources"
+        },
+        "scope": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "datasetId",
+        "sources",
+        "scope"
+      ],
+      "additionalProperties": false
+    },
+    "aPeakSettings": {
+      "type": "object",
+      "properties": {
+        "smoothingWindow": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 101
+        },
+        "minProminencePercent": {
+          "type": "number",
+          "exclusiveMinimum": 0,
+          "maximum": 100
+        },
+        "minDistance": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "detectionMode": {
+          "enum": [
+            "adaptive",
+            "snip",
+            "global"
+          ]
+        },
+        "minSignificance": {
+          "type": "number",
+          "minimum": 2,
+          "maximum": 20
+        },
+        "snipIterations": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 200
+        },
+        "fitOverlaps": {
+          "type": "boolean"
+        }
+      },
+      "additionalProperties": false
+    },
+    "aMatchSettings": {
+      "type": "object",
+      "properties": {
+        "toleranceKeV": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "topN": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 10
+        }
+      },
+      "additionalProperties": false
+    }
+  }
 }

@@ -16,7 +16,7 @@ const descriptions={
   nexus_query_gamma:'查询用户明确给出的单个能量。结果只是固定核数据库候选，不是样品检出结论。',
   nexus_rank_nuclide_candidates:'对已标定谱形成核素级证据，同时保留谱线一致性等级和独立标定质量。',
   nexus_analyze_spectrum:'兼容入口：执行 QC、可选标定、寻峰和可选候选排序。',
-  nexus_validate_analysis:'从谱线级结果重建核素级证据并逐字段验证数值、来源、说明、警告与输入哈希。',
+  nexus_validate_analysis:'从声明的输入谱和标定参考点复算派生结果，按固定数据库记录核对数值、来源、残差及支持资格；不认证原始测量真实性。',
   nexus_generate_report:'便捷入口：重新执行分析、验证并生成报告。需要报告既有快照时不要使用本工具。',
   nexus_generate_report_from_analysis:'首选报告入口：验证传入的同一份分析快照，并仅对该快照生成报告。'
 };
@@ -43,4 +43,5 @@ async function executeUnchecked(name,args){
   throw Object.assign(new Error(`未知工具：${name}`),{code:'UNKNOWN_TOOL'});
 }
 
-export async function executeAgentTool(name,args={}){args=cleanArgs(args);validateToolInput(name,args);return validateToolOutput(name,await executeUnchecked(name,args))}
+// Do not expose mutable references to the trusted database through query results.
+export async function executeAgentTool(name,args={}){args=cleanArgs(args);validateToolInput(name,args);return structuredClone(validateToolOutput(name,await executeUnchecked(name,args)))}

@@ -12,10 +12,11 @@ Nexus-NAA is an evidence-driven gamma-spectrum analysis agent for neutron activa
 
 ## Agent Workbench
 
-![Current Nexus-NAA workbench with the new icon, assistant, shared data flow, and spectrum import area](assets/nexus-naa-workbench-2026-10-01-en.png)
+![Current Nexus-NAA workbench with assistant, shared data flow, and spectrum import area](assets/nexus-naa-workbench-2026-10-03-en.png)
 
 ## Changelog
 
+- **V1.3 validation hardening (2026-10-03):** Replay QC, calibration, peak search, matching and evidence from the declared spectrum, reference points and settings; check records, values, provenance and support eligibility against the fixed nuclear database. Strengthened nested schemas, isolated tool return values from mutable database references, and corrected the workbench report path to pass the trusted database. Added joint-tampering and valid-control tests; 116/116 tests pass. Refreshed both live workbench screenshots. Passing validation establishes deterministic consistency, not measurement authenticity or blind-identification accuracy; see [scientific validation scope](docs/SCIENTIFIC_VALIDATION.md).
 - **V1.3 visual update (2026-10-01):** Added the “From raw spectra to reviewable results” banner and spectrum artwork, with a dark-blue header, cyan-to-blue buttons and light cards. Refined the desktop data-flow panel, mobile layout, keyboard focus and reduced-motion behavior. Regenerated both language screenshots.
 - **V1.3 interface update (2026-10-01):** Workspaces now follow the selected task: full analysis, peak search, reliability review, reporting, or nuclear-data lookup. Peak settings and help follow the detection mode, and hidden settings do not supply that mode's input. Simplified page titles and phase labels, updated bilingual interface text and the source name of the user-provided nuclear data. Replaced the icon with the supplied green atom artwork, removed its exterior white background, and refreshed the header, browser icon, and workbench screenshots.
 - **V1.3 (2026-09-24):** Broad tolerance retains candidates; a narrower support window and line-independence checks determine `supported` status. Added canonical JSON SHA-256 analysis fingerprints and an executable identification quality gate. Refreshed the screenshot from the running V1.3 interface.
