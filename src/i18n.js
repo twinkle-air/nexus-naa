@@ -24,7 +24,7 @@ const translations = new Map(Object.entries({
   '有伴随峰支持':'Supported by companion peaks','暂定候选':'Tentative candidate','存在冲突':'Conflicting evidence','证据不足':'Insufficient evidence','容差范围内无数据库记录：证据不足':'No database records within tolerance: insufficient evidence','已寻峰：当前阈值下未找到峰':'Peak search complete: no peaks found at this threshold',
   '文件已载入，可以开始分析。':'File loaded. Ready to analyze.','正在读取新文件，旧结果已清除。':'Reading the new file; previous results cleared.','文件已载入并共享给全部功能区。':'File loaded and shared across all sections.','输入已修改，相关旧结果已失效，请重新执行。':'Inputs changed; dependent results invalidated. Run again.',
   '填写当前模型名称或版本标签':'Enter the current model name or version','填写实际 API 模型名':'Enter the API model name','例如 661.657':'e.g. 661.657',
-  '用户提供的核素库（源自西南辐射监测院）':'User-provided nuclide library (from Southwest Radiation Monitoring Institute)',
+  '用户提供的核素库（源自西南核与辐射安全监督站）':'User-provided nuclide library (from Southwest Nuclear and Radiation Safety Supervision Station)',
   '输入“分析这张谱”“找出显著峰”“1779 keV 可能是什么”“这个判断可靠吗”或“生成报告”。':'Try “Analyze this spectrum”, “Find significant peaks”, “What could 1779 keV be?”, “How reliable is this?” or “Generate report”.',
   '运行方式':'Mode','离线操作助手（规则路由）':'Offline assistant (rule router)','手动真实模型验证':'Manual real-model validation','模型名/验证标签':'Model / validation label','例如模型名称':'e.g. model name',
   'API 密钥及地址只从服务端环境变量读取。模型只选择操作；核谱计算和证据解释仍由本地工具完成。':'API keys and endpoints are read only from server environment variables. The model selects operations; spectrum calculations and evidence interpretation remain local.',

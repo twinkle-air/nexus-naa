@@ -11,7 +11,7 @@
       "version": "2008-08"
     },
     "COMPETITION_LIBRARY_2026": {
-      "name": "User-provided nuclide library (from Southwest Radiation Monitoring Institute)",
+      "name": "用户提供的核素库（源自西南核与辐射安全监督站）",
       "url": "data/reference-nuclide-library.xlsx",
       "version": "received-2026-09-06",
       "sha256": "a818b34161319527cb913d92414c890b967faa0b2f6d2eae408406417d103a39",
